@@ -33,7 +33,7 @@ export default {
   },
   activated () {
     $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
-    this.$refs.illustList.refreshTags()
+    mdui.mutation()
   },
   deactivated () {
     $('body').removeClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')

@@ -29,8 +29,6 @@ export default {
   name: 'Tag',
   activated () {
     $('body').addClass('mdui-appbar-with-toolbar')
-    this.$refs.illustList.refreshTags()
-    this.$refs.collect.refresh()
   },
   deactivated () {
     $('body').removeClass('mdui-appbar-with-toolbar')

@@ -138,6 +138,9 @@ export default {
   mounted () {
     mdui.mutation()
   },
+  activated () {
+    this.collectedTags = JSON.parse(localStorage.collectedTags)
+  },
   data () {
     return {
       offset: 0,
@@ -213,9 +216,6 @@ export default {
       this.waiting = false
       this.noMore = false
       this.getIllusts()
-    },
-    refreshTags () {
-      this.collectedTags = JSON.parse(localStorage.collectedTags)
     }
   },
   computed: {

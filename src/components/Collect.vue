@@ -10,6 +10,9 @@ export default {
   data: function () {
     return { collected: this.isCollected() }
   },
+  activated () {
+    this.collected = this.isCollected()
+  },
   computed: {
     icon () {
       return this.collected ? 'star' : 'star_border'
@@ -35,9 +38,6 @@ export default {
         this.collected = true
       }
       localStorage.collectedTags = JSON.stringify(list)
-    },
-    refresh () {
-      this.collected = this.isCollected()
     }
   }
 }

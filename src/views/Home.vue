@@ -16,12 +16,12 @@
     </div>
     <div id="random-illusts">
       <div class="mdui-container">
-        <illust-list ref="leftList" :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']"></illust-list>
+        <illust-list :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']"></illust-list>
       </div>
     </div>
     <div id="rank-illusts">
       <div class="mdui-container">
-        <illust-list ref="rightList" :oroginSort="common.IllustSort.LIKES"></illust-list>
+        <illust-list :oroginSort="common.IllustSort.LIKES"></illust-list>
       </div>
     </div>
   </div>
@@ -46,8 +46,6 @@ export default {
   activated () {
     $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
     mdui.mutation()
-    this.$refs.leftList.refreshTags()
-    this.$refs.rightList.refreshTags()
   },
   deactivated () {
     $('body').removeClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')

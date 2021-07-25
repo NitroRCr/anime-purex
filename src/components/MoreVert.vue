@@ -7,7 +7,7 @@
     >
       <i class="mdui-icon material-icons">more_vert</i>
     </a>
-    <ul class="mdui-menu" id="top-more-vert-menu">
+    <ul ref="meum" class="mdui-menu" id="top-more-vert-menu">
       <li class="mdui-menu-item">
         <router-link to="/favorited" class="mdui-ripple">收藏列表</router-link>
       </li>
@@ -19,7 +19,10 @@
 </template>
 <script>
 export default {
-  name: 'MoreVert'
+  name: 'MoreVert',
+  activated () {
+    this.$refs.meum.classList.remove('mdui-menu-closing')
+  }
 }
 </script>
 <style lang="scss" scoped>

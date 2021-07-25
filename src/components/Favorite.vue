@@ -9,7 +9,10 @@ export default {
     illust: { required: true }
   },
   data: function () {
-    return { favorited: this.isfavorited() }
+    return { favorited: this.isFavorited() }
+  },
+  activated () {
+    this.favorited = this.isFavorited()
   },
   computed: {
     style () {
@@ -24,7 +27,7 @@ export default {
     }
   },
   methods: {
-    isfavorited () {
+    isFavorited () {
       if (this.indexOf(this.illust.id) === -1) {
         return false
       } else {
@@ -32,7 +35,7 @@ export default {
       }
     },
     toggle () {
-      const favorited = this.isfavorited()
+      const favorited = this.isFavorited()
       const list = JSON.parse(localStorage.favoritedList)
       if (favorited) {
         list.splice(this.indexOf(this.illust.id), 1)
