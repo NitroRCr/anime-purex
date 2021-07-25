@@ -2,17 +2,15 @@
   <div id="illust-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <router-link to="/" class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></router-link
+        <a href="javascript:;" @click="$router.back()" class="mdui-btn mdui-btn-icon"
+          ><i class="mdui-icon material-icons">arrow_back</i></a
         >
         <a href="javascript:;" class="mdui-typo-title">{{ illust ? illust.title : '' }}</a>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
         >
-        <a href="javascript:;" class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">more_vert</i></a
-        >
+        <more-vert></more-vert>
       </div>
     </div>
     <div class="container" :class="common.screenSize">
@@ -28,7 +26,7 @@
         </div>
         <div class="illust-info">
           <div class="illust-title">
-            {{ illust.title }} <favorite :illust-id="illust.id"></favorite>
+            {{ illust.title }} <favorite :illust="illust"></favorite>
             <download-image
               :urls="illust.image_urls[currp]"
               :fname-prefix="`${illust.title}_p${currp}`"
@@ -38,15 +36,16 @@
           <image-list
             :image-urls="illust.image_urls"
             v-if="illust.image_urls.length > 1"
+            @click="changeImage"
           ></image-list>
-          <div class="illust-caption"><p v-html="illust.caption"></p></div>
+          <div class="illust-caption mdui-text-color-text" v-html="illust.caption"></div>
           <div class="illust-tags mdui-text-color-theme">
-            <a
-              src="javascript:;"
+            <router-link
+              :to="`/tags/${tag}`"
               class="illust-tag"
               v-for="(tag, index) in illust.tags"
               :key="index"
-              >#{{ tag }}</a
+              >#{{ tag }}</router-link
             >
           </div>
           <div class="user-info">
@@ -71,6 +70,7 @@ import ImageList from '../components/ImageList.vue'
 import PageFooter from '../components/PageFooter.vue'
 import Favorite from '../components/Favorite.vue'
 import DownloadImage from '../components/DownloadImage.vue'
+import MoreVert from '../components/MoreVert.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
 const $ = mdui.$
@@ -80,11 +80,14 @@ export default {
     ImageList,
     PageFooter,
     Favorite,
-    DownloadImage
+    DownloadImage,
+    MoreVert
   },
   data: () => ({
     illust: null,
-    common
+    largeLoaded: false,
+    common,
+    currp: 0
   }),
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')
@@ -98,6 +101,7 @@ export default {
       const id = this.$route.params.id
       if (common.cachedIllusts[id]) {
         this.illust = common.cachedIllusts[id]
+        this.loadLarge()
         return
       }
       $.ajax({
@@ -107,23 +111,33 @@ export default {
         success: (illust) => {
           this.illust = illust
           common.cachedIllusts[id] = illust
+          this.loadLarge()
         },
         error: (jqXHR, textStatus, errorThrown) => {
           mdui.snackbar(`插画获取失败: ${textStatus}`)
         }
       })
+    },
+    changeImage (index) {
+      this.currp = index
+      this.largeLoaded = false
+      this.loadLarge()
+    },
+    loadLarge () {
+      const img = new Image()
+      const urls = this.illust.image_urls[this.currp]
+      img.onload = () => {
+        this.largeLoaded = true
+      }
+      img.src = common.getImageUrl(urls, 'large')
     }
   },
   computed: {
     currImage () {
       if (!this.illust) return null
       const urls = this.illust.image_urls[this.currp]
-      return common.getImageUrl(urls, 'large')
-    },
-    currp () {
-      if (this.illust.image_urls[this.$route.query.p]) {
-        return this.$route.query.p
-      } else return 0
+      if (this.largeLoaded) return common.getImageUrl(urls, 'large')
+      else return common.getImageUrl(urls, 'medium')
     }
   }
 }
@@ -192,6 +206,12 @@ export default {
       .download-image,
       .favorite-btn {
         float: right;
+      }
+    }
+    .illust-caption {
+      margin: 14px 0;
+      a {
+        display: inline-block;
       }
     }
     .illust-tags {

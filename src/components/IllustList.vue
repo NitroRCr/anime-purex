@@ -1,14 +1,89 @@
 <template>
   <div class="illust-list-container">
+    <div class="mdui-panel" v-if="!staticIllusts" mdui-panel>
+      <div class="mdui-panel-item">
+        <div class="mdui-panel-item-header">
+          <div class="mdui-panel-item-title">
+            <i class="material-icons mdui-icon">sort</i
+            ><span class="options">选项</span>
+          </div>
+          <i class="mdui-panel-item-arrow mdui-icon material-icons"
+            >keyboard_arrow_down</i
+          >
+        </div>
+        <div class="mdui-panel-item-body">
+          <div class="sort-select">
+            <div class="panel-sub-title">排列顺序</div>
+            <div class="select-container">
+              <select class="mdui-select" mdui-select="{ position: 'bottom' }" v-model="sort">
+                <option :value="common.IllustSort.RANDOM">随机</option>
+                <option :value="common.IllustSort.DEFAULT">最相关</option>
+                <option :value="common.IllustSort.LIKES">最热门</option>
+                <option :value="common.IllustSort.TIME">最新</option>
+              </select>
+            </div>
+          </div>
+          <div class="eval-select">
+            <div class="panel-sub-title">风格过滤</div>
+            <ul class="mdui-list">
+              <li
+                class="mdui-list-item mdui-ripple"
+                v-for="evaluator of allEvals"
+                :key="evaluator.name"
+              >
+                <i class="mdui-list-item-icon mdui-icon material-icons">{{
+                  evaluator.icon || "style"
+                }}</i>
+                <div class="mdui-list-item-content">
+                  {{ evaluator.showName }}
+                </div>
+                <label class="mdui-switch">
+                  <input
+                    type="checkbox"
+                    :value="evaluator.name"
+                    v-model="evaluators"
+                  />
+                  <i class="mdui-switch-icon"></i>
+                </label>
+              </li>
+            </ul>
+          </div>
+          <div class="tag-select">
+            <div class="panel-sub-title">标签过滤</div>
+            <ul class="mdui-list">
+              <li class="mdui-list-item" v-if="collectedTags.length === 0">你还没有收藏的标签哦</li>
+              <li
+                class="mdui-list-item"
+                v-for="tag of collectedTags"
+                :key="tag"
+              >
+                <collect class="mdui-list-item-icon" :tag="tag"></collect>
+                <div class="mdui-list-item-content">
+                  {{ tag }}
+                </div>
+                <label class="mdui-switch">
+                  <input
+                    type="checkbox"
+                    :value="tag"
+                    v-model="inputTags"
+                  />
+                  <i class="mdui-switch-icon"></i>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="illust-list">
-      <router-link
-        :to="`/illusts/${illust.id}`"
-        class="illust"
-        v-for="(illust, index) in illusts"
+      <div
+        class="illust mdui-text-color-theme-text"
+        v-for="(illust, index) in (staticIllusts || illusts)"
         :key="index"
         :style="illustStyle"
       >
         <div
+          @click.self="$router.push(`/illusts/${illust.id}`)"
           class="image mdui-hoverable"
           :style="{
             backgroundImage: `url(${common.getImageUrl(
@@ -16,7 +91,9 @@
               'medium'
             )})`,
           }"
-        ></div>
+        >
+          <favorite :illust="illust"></favorite>
+        </div>
         <div class="illust-info">
           <div class="illust-title">{{ illust.title }}</div>
           <div class="user-info">
@@ -28,38 +105,59 @@
                 })`,
               }"
             ></div>
-            <div class="user-name">{{ illust.user.name }}</div>
+            <div class="user-name mdui-text-color-theme-secondary">{{ illust.user.name }}</div>
           </div>
         </div>
-      </router-link>
+      </div>
     </div>
-    <illust-loader @load="getIllusts" v-if="!noMore"></illust-loader>
-    <div class="no-more" v-if="noMore">没有更多了...</div>
+    <illust-loader @load="getIllusts" v-if="!noMore && !staticIllusts"></illust-loader>
+    <div class="no-more" v-if="noMore || staticIllusts">没有更多了...</div>
   </div>
 </template>
 <script>
 import IllustLoader from './IllustLoader.vue'
+import Favorite from './Favorite.vue'
+import Collect from './Collect.vue'
 import common from '@/common'
 import mdui from 'mdui'
 const $ = mdui.$
 export default {
   name: 'IllustList',
-  props: ['query', 'sort'],
-  components: {
-    IllustLoader
+  props: {
+    text: { default: '' },
+    presetTag: { default: null },
+    originEvals: { default: () => [] },
+    originSort: { default: common.IllustSort.DEFAULT },
+    staticIllusts: { default: null }
   },
-  data: () => ({
-    offset: 0,
-    illusts: [],
-    waiting: false,
-    common,
-    xhr: null,
-    noMore: false,
-    preventErr: false
-  }),
+  components: {
+    IllustLoader,
+    Favorite,
+    Collect
+  },
+  mounted () {
+    mdui.mutation()
+  },
+  data () {
+    return {
+      offset: 0,
+      illusts: [],
+      waiting: false,
+      common,
+      xhr: null,
+      noMore: false,
+      preventErr: false,
+      allEvals: common.evaluators,
+      inputTags: [],
+      collectedTags: JSON.parse(localStorage.collectedTags),
+      sort: this.originSort,
+      evaluators: this.originEvals,
+      limit: 20
+    }
+  },
   methods: {
     getIllusts () {
-      if (this.waiting || this.noMore) {
+      if (this.staticIllusts || this.waiting || this.noMore) {
         return
       }
       this.waiting = true
@@ -67,7 +165,7 @@ export default {
         url: common.apiHost + '/illusts',
         data: {
           search: JSON.stringify({
-            limit: 20,
+            limit: this.limit,
             offset: this.offset,
             sort: this.sort,
             query: this.query
@@ -86,7 +184,7 @@ export default {
           for (const illust of illusts) {
             common.cachedIllusts[illust.id] = illust
           }
-          if (illusts.length === 0) {
+          if (illusts.length < this.limit) {
             this.noMore = true
           }
         },
@@ -103,7 +201,7 @@ export default {
       })
     },
     refresh () {
-      this.illusts = []
+      this.illusts.length = 0
       this.offset = 0
       if (this.xhr) {
         this.preventErr = true
@@ -115,6 +213,9 @@ export default {
       this.waiting = false
       this.noMore = false
       this.getIllusts()
+    },
+    refreshTags () {
+      this.collectedTags = JSON.parse(localStorage.collectedTags)
     }
   },
   computed: {
@@ -140,17 +241,58 @@ export default {
       return {
         width: `calc(${Math.round(100 / cols)}% - 10px)`
       }
+    },
+    query () {
+      const query = {}
+      if (this.text) {
+        query.text = this.text
+      }
+      if (this.inputTags) {
+        const tags = Array.from(this.inputTags)
+        if (this.presetTag && tags.indexOf(this.presetTag) === -1) {
+          tags.push(this.presetTag)
+        }
+        query.tags = tags
+      }
+      if (this.evaluators) {
+        query.passed_evals = this.evaluators
+      }
+      query.sort = this.sort
+      return query
+    }
+  },
+  watch: {
+    query () {
+      this.refresh()
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.mdui-panel {
+  margin-top: 15px;
+  .panel-sub-title {
+    margin-top: 5px;
+    font-weight: bold;
+  }
+  .sort-select {
+    .select-container {
+      padding: 10px 16px;
+    }
+  }
+  span.options {
+    margin-left: 10px;
+    font-weight: bold;
+    transform: translateY(0.1em);
+    display: inline-block;
+  }
+}
 .illust-list {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10px;
   .illust {
     display: block;
-    color: rgba(0, 0, 0, 0.87);
     text-decoration: none;
     margin: 5px;
     .image {
@@ -160,6 +302,13 @@ export default {
       background-size: cover;
       background-position: center;
       border-radius: 5%;
+      position: relative;
+      .favorite-btn {
+        color: white;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
     }
     .illust-info {
       .illust-title,
@@ -194,7 +343,6 @@ export default {
           line-height: 1.15;
           display: inline-block;
           margin-left: 5px;
-          color: rgba(0, 0, 0, 0.54);
         }
       }
     }

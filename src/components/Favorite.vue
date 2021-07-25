@@ -2,16 +2,14 @@
   <button class="favorite-btn mdui-btn-icon mdui-btn" @click="toggle()" :style="style"><i class="mdui-icon material-icons">{{ icon }}</i></button>
 </template>
 <script>
+import mdui from 'mdui'
 export default {
   name: 'Favorite',
-  props: ['illustId'],
+  props: {
+    illust: { required: true }
+  },
   data: function () {
     return { favorited: this.isfavorited() }
-  },
-  beforeCreate () {
-    if (localStorage.favoritedList === undefined) {
-      localStorage.favoritedList = JSON.stringify([])
-    }
   },
   computed: {
     style () {
@@ -27,8 +25,7 @@ export default {
   },
   methods: {
     isfavorited () {
-      const list = localStorage.favoritedList
-      if (list.indexOf(this.illustId) === -1) {
+      if (this.indexOf(this.illust.id) === -1) {
         return false
       } else {
         return true
@@ -38,13 +35,24 @@ export default {
       const favorited = this.isfavorited()
       const list = JSON.parse(localStorage.favoritedList)
       if (favorited) {
-        list.splice(list.indexOf(this.illustId), 1)
+        list.splice(this.indexOf(this.illust.id), 1)
         this.favorited = false
       } else {
-        list.push(this.illustId)
+        if (list.length >= 1000) {
+          mdui.snackbar('图片太多，装不下了~')
+          return
+        }
+        list.push(this.illust)
         this.favorited = true
       }
       localStorage.favoritedList = JSON.stringify(list)
+    },
+    indexOf (illustId) {
+      const list = JSON.parse(localStorage.favoritedList)
+      for (const i in list) {
+        if (list[i].id === illustId) return i
+      }
+      return -1
     }
   }
 }

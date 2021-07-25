@@ -6,11 +6,11 @@
           class="mdui-textfield-input"
           type="text"
           placeholder="搜索插图"
-          v-model="query.text"
+          v-model="searchText"
           @input="refresh"
         />
       </div>
-      <illust-list ref="illustList" v-if="query.text" :query="query" :sort="sort"></illust-list>
+      <illust-list ref="illustList" v-if="searchText" :text="searchText" :originSort="sort"></illust-list>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default {
     IllustList
   },
   data: () => ({
-    query: { text: '' },
+    searchText: '',
     sort: common.IllustSort.DEFAULT
   }),
   methods: {

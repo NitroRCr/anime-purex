@@ -56,13 +56,28 @@ const getScreenSize = () => {
 setInterval(() => {
   common.screenSize = getScreenSize()
 }, 200)
+const evaluators = [
+  {
+    name: 'quality_v1',
+    showName: '高质量v1',
+    icon: 'high_quality'
+  }
+]
 const common = {
   apiHost,
   IllustSort,
   webpSupported,
   cachedIllusts,
   getImageUrl,
-  screenSize: getScreenSize()
+  screenSize: getScreenSize(),
+  evaluators
 }
+const localDataVer = '2'
+if (localStorage.localDataVer !== localDataVer) {
+  localStorage.clear()
+  localStorage.localDataVer = localDataVer
+}
+if (!localStorage.favoritedList) localStorage.favoritedList = JSON.stringify([])
+if (!localStorage.collectedTags) localStorage.collectedTags = JSON.stringify([])
 export default common
 </script>

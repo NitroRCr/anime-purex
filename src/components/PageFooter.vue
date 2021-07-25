@@ -2,7 +2,7 @@
   <div id="page-footer">
     <div class="space-holder"></div>
     <footer>
-      <div>NitroFire © 2021.</div>
+      <div class="mdui-text-color-theme-secondary">NitroFire © 2021.</div>
     </footer>
   </div>
 </template>
@@ -21,7 +21,6 @@ footer {
 
   > div {
     margin-left: 10px;
-    color: #555;
     font-weight: bold;
   }
 }

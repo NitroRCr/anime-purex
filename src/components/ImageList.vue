@@ -1,12 +1,13 @@
 <template>
   <div class="image-list">
-    <router-link
-      :to="`?p=${index}`"
+    <a
+      href="javascript:;"
+      @click="$emit('click', index)"
       class="image-item mdui-hoverable mdui-ripple"
       v-for="(urls, index) in this.imageUrls"
       :key="index"
       :style="{ backgroundImage: `url(${common.getImageUrl(urls, 'medium')})` }"
-    ></router-link>
+    ></a>
   </div>
 </template>
 <script>

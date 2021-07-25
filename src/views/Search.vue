@@ -1,15 +1,13 @@
 <template>
   <div id="search-illust">
-    <div class="mdui-appbar">
+    <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <router-link to="/" class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></router-link
+        <a href="javascript:;" @click="$router.back()" class="mdui-btn mdui-btn-icon"
+          ><i class="mdui-icon material-icons">arrow_back</i></a
         >
         <a href="javascript:;" class="mdui-typo-title">搜索</a>
         <div class="mdui-toolbar-spacer"></div>
-        <a href="javascript:;" class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">more_vert</i></a
-        >
+        <more-vert></more-vert>
       </div>
       <div class="mdui-tab mdui-color-theme" mdui-tab>
         <a href="#illust-search" class="mdui-ripple mdui-ripple-white">插图</a>
@@ -18,20 +16,27 @@
         >
       </div>
     </div>
-    <illust-search id="illust-search"></illust-search>
+    <illust-search ref="illustList" id="illust-search"></illust-search>
     <div id="user-search"></div>
   </div>
 </template>
 <script>
 import IllustSearch from '../components/IllustSearch.vue'
+import MoreVert from '../components/MoreVert.vue'
 import mdui from 'mdui'
+const $ = mdui.$
 export default {
   name: 'Search',
   components: {
-    IllustSearch
+    IllustSearch,
+    MoreVert
   },
-  mounted () {
-    mdui.mutation()
+  activated () {
+    $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
+    this.$refs.illustList.refreshTags()
+  },
+  deactivated () {
+    $('body').removeClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
   }
 }
 </script>

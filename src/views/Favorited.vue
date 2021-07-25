@@ -1,8 +1,14 @@
 <template>
-  <div class="home">
+  <div id="favorited-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" class="mdui-typo-title">PureX</a>
+        <a
+          href="javascript:;"
+          @click="$router.back()"
+          class="mdui-btn mdui-btn-icon"
+          ><i class="mdui-icon material-icons">arrow_back</i></a
+        >
+        <a href="javascript:;" class="mdui-typo-title">收藏列表</a>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
@@ -10,46 +16,43 @@
         <more-vert></more-vert>
       </div>
       <div class="mdui-tab mdui-color-theme" mdui-tab>
-        <a href="#random-illusts" class="mdui-ripple mdui-ripple-white">精选</a>
-        <a href="#rank-illusts" class="mdui-ripple mdui-ripple-white">排行</a>
+        <a href="#favorite-illusts" class="mdui-ripple mdui-ripple-white"
+          >插图</a
+        >
+        <a href="#collected-tags" class="mdui-ripple mdui-ripple-white">标签</a>
       </div>
     </div>
-    <div id="random-illusts">
+    <div id="favorite-illusts">
       <div class="mdui-container">
-        <illust-list ref="leftList" :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']"></illust-list>
+        <illust-list :staticIllusts="illusts"></illust-list>
       </div>
     </div>
-    <div id="rank-illusts">
+    <div id="collected-tags">
       <div class="mdui-container">
-        <illust-list ref="rightList" :oroginSort="common.IllustSort.LIKES"></illust-list>
+
       </div>
     </div>
   </div>
 </template>
-
 <script>
-import IllustList from '@/components/IllustList.vue'
+import IllustList from '../components/IllustList.vue'
 import MoreVert from '../components/MoreVert.vue'
-import common from '@/common.vue'
 import mdui from 'mdui'
 const $ = mdui.$
-
 export default {
-  name: 'Home',
+  name: 'Favorited',
   components: {
     IllustList,
     MoreVert
   },
   data: () => ({
-    common
+    illusts: JSON.parse(localStorage.favoritedList),
+    tags: JSON.parse(localStorage.collectedTags)
   }),
-  activated () {
+  mounted () {
     $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
-    mdui.mutation()
-    this.$refs.leftList.refreshTags()
-    this.$refs.rightList.refreshTags()
   },
-  deactivated () {
+  beforeDestroy () {
     $('body').removeClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
   }
 }
