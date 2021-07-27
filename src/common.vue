@@ -21,6 +21,7 @@ const webpSupported = (function () {
   }
 })()
 const cachedIllusts = {}
+const cachedUsers = {}
 const getImageUrl = (urls, quality) => {
   if (quality === 'original') {
     return apiHost + urls.original
@@ -77,6 +78,7 @@ const common = {
   APIType,
   webpSupported,
   cachedIllusts,
+  cachedUsers,
   getImageUrl,
   screenSize: getScreenSize(),
   evaluators

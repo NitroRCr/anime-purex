@@ -31,12 +31,13 @@
         </div>
         <div class="illust-info">
           <div class="illust-title">
-            {{ illust.title }} <origin-url :illust="illust"></origin-url
-            ><favorite :illust="illust"></favorite>
+            <favorite :illust="illust"></favorite>
             <download-image
               :urls="illust.image_urls[currp]"
               :fname-prefix="`${illust.title}_p${currp}`"
             ></download-image>
+            <span>{{ illust.title }}</span>
+            <origin-url :illust="illust"></origin-url>
           </div>
           <div class="mdui-divider"></div>
           <image-list
@@ -58,13 +59,22 @@
             >
           </div>
           <div class="illust-other-info mdui-text-color-theme-secondary">
-            <span class="info-item"><i class="material-icons mdui-icon">date_range</i>&nbsp;{{ publishDate }}</span>
-            <span class="info-item"><i class="material-icons mdui-icon">favorite</i>&nbsp;{{ illust.likes }}</span>
+            <span class="info-item"
+              ><i class="material-icons mdui-icon">date_range</i>&nbsp;{{
+                publishDate
+              }}</span
+            >
+            <span class="info-item"
+              ><i class="material-icons mdui-icon">favorite</i>&nbsp;{{
+                illust.likes
+              }}</span
+            >
           </div>
           <user-brief :user="illust.user"></user-brief>
         </div>
       </div>
     </div>
+    <div style="height: 30px"></div>
   </div>
 </template>
 <script>
@@ -115,6 +125,7 @@ export default {
         success: (illust) => {
           this.illust = illust
           common.cachedIllusts[id] = illust
+          common.cachedUsers[illust.user.id] = illust.user
           this.loadLarge()
         },
         error: (jqXHR, textStatus, errorThrown) => {
@@ -205,7 +216,7 @@ export default {
   .illust-info {
     padding: 5px 10px;
     .illust-title {
-      height: 36px;
+      min-height: 36px;
       font-weight: bold;
       font-size: 18px;
       line-height: 2;

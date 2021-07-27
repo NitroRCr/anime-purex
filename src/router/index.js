@@ -5,6 +5,7 @@ import Illust from '../views/Illust.vue'
 import Search from '../views/Search.vue'
 import Favorited from '../views/Favorited.vue'
 import Tag from '../views/Tag.vue'
+import User from '../views/User.vue'
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/tags/:tag',
     name: 'Tag',
     component: Tag
+  },
+  {
+    path: '/users/:id',
+    name: 'User',
+    component: User
   }
 ]
 

@@ -1,3 +1,6 @@
 module.exports = {
-  productionSourceMap: false
+  productionSourceMap: false,
+  pwa: {
+    themeColor: 'rgba(0, 0, 0, 0)'
+  }
 }

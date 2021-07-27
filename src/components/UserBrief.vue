@@ -1,5 +1,5 @@
 <template>
-  <div class="user-brief">
+  <div class="user-brief mdui-ripple" @click.self="$router.push(`/users/${user.id}`).catch(()=>{})">
     <div
       class="user-avatar"
       :style="{
@@ -7,6 +7,7 @@
       }"
     ></div>
     <div class="user-name">{{ user.name }}</div>
+    <origin-url :user="user"></origin-url>
     <button
       @click="toggle"
       class="follow-btn mdui-btn mdui-btn-raised mdui-ripple mdui-btn-dense"
@@ -17,12 +18,16 @@
   </div>
 </template>
 <script>
+import OriginUrl from './OriginUrl.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
 export default {
   name: 'UserBrief',
   props: {
     user: { required: true }
+  },
+  components: {
+    OriginUrl
   },
   data: function () {
     return {
@@ -70,7 +75,7 @@ export default {
 <style lang="scss" scoped>
 .user-brief {
   height: 30px;
-  margin: 5px;
+  padding: 10px 5px;
   text-align: left;
   display: flex;
   align-items: center;
@@ -80,6 +85,7 @@ export default {
     background-size: cover;
     background-position: center;
     border-radius: 50%;
+    z-index: -1;
   }
   .user-name {
     margin-top: 2px;
@@ -88,6 +94,7 @@ export default {
     line-height: 1.15;
     display: inline-block;
     margin-left: 8px;
+    z-index: -1;
   }
   .follow-btn {
     position: absolute;

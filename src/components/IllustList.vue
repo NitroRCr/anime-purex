@@ -106,7 +106,7 @@
         </div>
         <div class="illust-info">
           <div class="illust-title">{{ illust.title }}</div>
-          <div class="user-info">
+          <a class="user-info" :href="`/users/${illust.user.id}`">
             <div
               class="user-avatar"
               :style="{
@@ -116,7 +116,7 @@
               }"
             ></div>
             <div class="user-name mdui-text-color-theme-secondary">{{ illust.user.name }}</div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -139,7 +139,7 @@ export default {
     originEvals: { default: () => [] },
     originSort: { default: common.IllustSort.DEFAULT },
     originAgeLimit: { default: null },
-    originUser: { default: null },
+    user: { default: null },
     staticIllusts: { default: null }
   },
   components: {
@@ -199,6 +199,7 @@ export default {
           this.xhr = null
           for (const illust of illusts) {
             common.cachedIllusts[illust.id] = illust
+            common.cachedUsers[illust.user.id] = illust.user
           }
           if (illusts.length < this.limit) {
             this.noMore = true
@@ -274,6 +275,9 @@ export default {
       if (this.ageLimit !== null) {
         query.age_limit = this.ageLimit
       }
+      if (this.user !== null) {
+        query.user = this.user
+      }
       return query
     }
   },
@@ -346,6 +350,7 @@ export default {
         text-align: left;
         display: flex;
         align-items: center;
+        text-decoration: none;
         .user-avatar {
           height: 20px;
           width: 20px;

@@ -9,7 +9,7 @@
     </a>
     <ul ref="meum" class="mdui-menu" id="top-more-vert-menu">
       <li class="mdui-menu-item">
-        <router-link to="/favorited" class="mdui-ripple">收藏列表</router-link>
+        <router-link to="/favorited" class="mdui-ripple">收藏/关注</router-link>
       </li>
       <li class="mdui-menu-item">
         <a href="javascript:;" class="mdui-ripple" mdui-dialog="{target: '#dialog-theme'}">主题颜色</a>
