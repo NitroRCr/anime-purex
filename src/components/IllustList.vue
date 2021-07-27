@@ -23,6 +23,16 @@
               </select>
             </div>
           </div>
+          <div class="age-select">
+            <div class="panel-sub-title">年龄限制</div>
+            <div class="select-container">
+              <select class="mdui-select" mdui-select v-model="ageLimit">
+                <option :value="null">不限</option>
+                <option :value="common.AgeLimit.ALL_AGE">全年龄</option>
+                <option :value="common.AgeLimit.R_18">R-18</option>
+              </select>
+            </div>
+          </div>
           <div class="eval-select">
             <div class="panel-sub-title">风格过滤</div>
             <ul class="mdui-list">
@@ -128,6 +138,8 @@ export default {
     presetTag: { default: null },
     originEvals: { default: () => [] },
     originSort: { default: common.IllustSort.DEFAULT },
+    originAgeLimit: { default: null },
+    originUser: { default: null },
     staticIllusts: { default: null }
   },
   components: {
@@ -154,6 +166,7 @@ export default {
       inputTags: [],
       collectedTags: JSON.parse(localStorage.collectedTags),
       sort: this.originSort,
+      ageLimit: this.originAgeLimit,
       evaluators: this.originEvals,
       limit: 20
     }
@@ -258,6 +271,9 @@ export default {
         query.passed_evals = this.evaluators
       }
       query.sort = this.sort
+      if (this.ageLimit !== null) {
+        query.age_limit = this.ageLimit
+      }
       return query
     }
   },
@@ -275,7 +291,7 @@ export default {
     margin-top: 5px;
     font-weight: bold;
   }
-  .sort-select {
+  .sort-select, .age-select {
     .select-container {
       padding: 10px 16px;
     }

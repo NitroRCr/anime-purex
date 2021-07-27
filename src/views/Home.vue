@@ -21,7 +21,7 @@
     </div>
     <div id="rank-illusts">
       <div class="mdui-container">
-        <illust-list :oroginSort="common.IllustSort.LIKES"></illust-list>
+        <illust-list :originSort="common.IllustSort.LIKES"></illust-list>
       </div>
     </div>
   </div>

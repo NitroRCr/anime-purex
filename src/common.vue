@@ -5,6 +5,13 @@ const IllustSort = {
   LIKES: 2,
   TIME: 3
 }
+const AgeLimit = {
+  ALL_AGE: 0,
+  R_18: 1
+}
+const APIType = {
+  PIXIV: 0
+}
 const apiHost = 'https://apapi.krytro.com:1443'
 const webpSupported = (function () {
   try {
@@ -66,6 +73,8 @@ const evaluators = [
 const common = {
   apiHost,
   IllustSort,
+  AgeLimit,
+  APIType,
   webpSupported,
   cachedIllusts,
   getImageUrl,
@@ -79,5 +88,6 @@ if (localStorage.localDataVer !== localDataVer) {
 }
 if (!localStorage.favoritedList) localStorage.favoritedList = JSON.stringify([])
 if (!localStorage.collectedTags) localStorage.collectedTags = JSON.stringify([])
+if (!localStorage.followings) localStorage.followings = JSON.stringify([])
 export default common
 </script>

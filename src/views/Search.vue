@@ -16,12 +16,13 @@
         >
       </div>
     </div>
-    <illust-search ref="illustList" id="illust-search"></illust-search>
-    <div id="user-search"></div>
+    <illust-search id="illust-search"></illust-search>
+    <user-search id="user-search"></user-search>
   </div>
 </template>
 <script>
 import IllustSearch from '../components/IllustSearch.vue'
+import UserSearch from '../components/UserSearch.vue'
 import MoreVert from '../components/MoreVert.vue'
 import mdui from 'mdui'
 const $ = mdui.$
@@ -29,6 +30,7 @@ export default {
   name: 'Search',
   components: {
     IllustSearch,
+    UserSearch,
     MoreVert
   },
   activated () {

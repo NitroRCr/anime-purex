@@ -2,10 +2,15 @@
   <div id="illust-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" @click="$router.back()" class="mdui-btn mdui-btn-icon"
+        <a
+          href="javascript:;"
+          @click="$router.back()"
+          class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">arrow_back</i></a
         >
-        <a href="javascript:;" class="mdui-typo-title">{{ illust ? illust.title : '' }}</a>
+        <a href="javascript:;" class="mdui-typo-title">{{
+          illust ? illust.title : ""
+        }}</a>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
@@ -26,7 +31,8 @@
         </div>
         <div class="illust-info">
           <div class="illust-title">
-            {{ illust.title }} <favorite :illust="illust"></favorite>
+            {{ illust.title }} <origin-url :illust="illust"></origin-url
+            ><favorite :illust="illust"></favorite>
             <download-image
               :urls="illust.image_urls[currp]"
               :fname-prefix="`${illust.title}_p${currp}`"
@@ -38,7 +44,10 @@
             v-if="illust.image_urls.length > 1"
             @click="changeImage"
           ></image-list>
-          <div class="illust-caption mdui-text-color-text" v-html="illust.caption"></div>
+          <div
+            class="illust-caption mdui-text-color-text"
+            v-html="illust.caption"
+          ></div>
           <div class="illust-tags mdui-text-color-theme">
             <router-link
               :to="`/tags/${tag}`"
@@ -48,29 +57,23 @@
               >#{{ tag }}</router-link
             >
           </div>
-          <div class="user-info">
-            <div
-              class="user-avatar"
-              :style="{
-                backgroundImage: `url(${
-                  common.apiHost + illust.user.avatar_url
-                })`,
-              }"
-            ></div>
-            <div class="user-name">{{ illust.user.name }}</div>
+          <div class="illust-other-info mdui-text-color-theme-secondary">
+            <span class="info-item"><i class="material-icons mdui-icon">date_range</i>&nbsp;{{ publishDate }}</span>
+            <span class="info-item"><i class="material-icons mdui-icon">favorite</i>&nbsp;{{ illust.likes }}</span>
           </div>
+          <user-brief :user="illust.user"></user-brief>
         </div>
       </div>
-      <page-footer></page-footer>
     </div>
   </div>
 </template>
 <script>
 import ImageList from '../components/ImageList.vue'
-import PageFooter from '../components/PageFooter.vue'
 import Favorite from '../components/Favorite.vue'
 import DownloadImage from '../components/DownloadImage.vue'
 import MoreVert from '../components/MoreVert.vue'
+import UserBrief from '../components/UserBrief.vue'
+import OriginUrl from '../components/OriginUrl.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
 const $ = mdui.$
@@ -78,10 +81,11 @@ export default {
   name: 'Illust',
   components: {
     ImageList,
-    PageFooter,
     Favorite,
     DownloadImage,
-    MoreVert
+    MoreVert,
+    UserBrief,
+    OriginUrl
   },
   data: () => ({
     illust: null,
@@ -138,6 +142,10 @@ export default {
       const urls = this.illust.image_urls[this.currp]
       if (this.largeLoaded) return common.getImageUrl(urls, 'large')
       else return common.getImageUrl(urls, 'medium')
+    },
+    publishDate () {
+      const date = new Date(this.illust.publish_time * 1e3)
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     }
   }
 }
@@ -196,7 +204,6 @@ export default {
   }
   .illust-info {
     padding: 5px 10px;
-    text-align-last: left;
     .illust-title {
       height: 36px;
       font-weight: bold;
@@ -223,26 +230,15 @@ export default {
         margin-bottom: 5px;
       }
     }
-    .user-info {
-      height: 30px;
-      margin: 5px;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      .user-avatar {
-        height: 30px;
-        width: 30px;
-        background-size: cover;
-        background-position: center;
-        border-radius: 50%;
-      }
-      .user-name {
-        margin-top: 2px;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 1.15;
+    .illust-other-info {
+      margin: 10px 5px;
+      .info-item {
         display: inline-block;
-        margin-left: 8px;
+        margin-right: 10px;
+        .mdui-icon {
+          font-size: 1em;
+          transform: translateY(-0.1em);
+        }
       }
     }
   }

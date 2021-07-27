@@ -7,7 +7,6 @@
           type="text"
           placeholder="搜索插图"
           v-model="searchText"
-          @input="refresh"
         />
       </div>
       <illust-list ref="illustList" v-if="searchText" :text="searchText" :originSort="sort"></illust-list>
@@ -25,11 +24,6 @@ export default {
   data: () => ({
     searchText: '',
     sort: common.IllustSort.DEFAULT
-  }),
-  methods: {
-    refresh () {
-      this.$refs.illustList && this.$refs.illustList.refresh()
-    }
-  }
+  })
 }
 </script>

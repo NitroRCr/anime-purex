@@ -28,6 +28,7 @@ export default {
 <style lang="scss" scoped>
 .top-more-vert {
   margin: 0 4px;
+  flex-shrink: 0;
   a {
     min-width: 48px;
     height: 48px;
