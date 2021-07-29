@@ -2,10 +2,10 @@
   <div id="tag-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" @click="$router.back()" class="mdui-btn mdui-btn-icon"
+        <a href="javascript:;" @click="$emit('back')" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">arrow_back</i></a
         >
-        <a href="javascript:;" class="mdui-typo-title">#{{ tag }}</a>
+        <span class="mdui-typo-title">#{{ tag }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <collect ref="collect" :tag="tag"></collect>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
@@ -29,19 +29,18 @@ export default {
   name: 'Tag',
   activated () {
     $('body').addClass('mdui-appbar-with-toolbar')
+    this.tag = this.$route.params.tag
   },
   deactivated () {
     $('body').removeClass('mdui-appbar-with-toolbar')
   },
+  data: () => ({
+    tag: null
+  }),
   components: {
     IllustList,
     MoreVert,
     Collect
-  },
-  computed: {
-    tag () {
-      return this.$route.params.tag
-    }
   }
 }
 </script>

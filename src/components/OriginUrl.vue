@@ -9,6 +9,8 @@
 </template>
 <script>
 import common from '@/common.vue'
+import mdui from 'mdui'
+const $ = mdui.$
 export default {
   name: 'OrigainUrl',
   props: ['illust', 'user'],
@@ -28,6 +30,9 @@ export default {
         }
       }
     }
+  },
+  beforeDestroy () {
+    $('.mdui-tooltip').remove()
   }
 }
 </script>

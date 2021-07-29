@@ -41,8 +41,7 @@
           </label>
         </div>
       </div>
-
-      <p class="mdui-typo-title mdui-text-color-theme">主色</p>
+      <p class="mdui-typo-title mdui-text-color-theme">外观</p>
       <form class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3">
         <div class="mdui-col mdui-text-color-amber">
           <label class="mdui-radio mdui-m-b-1">

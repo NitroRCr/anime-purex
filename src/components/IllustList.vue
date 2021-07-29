@@ -249,7 +249,7 @@ export default {
           cols = 5
           break
         case 'xl':
-          cols = 7
+          cols = 6
           break
       }
       return {
@@ -342,7 +342,7 @@ export default {
         text-align: left;
         line-height: 1;
         font-weight: bold;
-        margin: 5px;
+        padding: 5px;
       }
       .user-info {
         height: 20px;

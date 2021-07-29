@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <keep-alive :include="['Home', 'Search', 'Tag']">
-      <router-view />
+      <router-view @back="backPage" />
     </keep-alive>
     <dialog-theme></dialog-theme>
   </div>
@@ -12,6 +12,15 @@ export default {
   name: 'App',
   components: {
     DialogTheme
+  },
+  methods: {
+    backPage () {
+      if (sessionStorage.homeAccessed) {
+        this.$router.back()
+      } else {
+        this.$router.replace('/')
+      }
+    }
   }
 }
 </script>

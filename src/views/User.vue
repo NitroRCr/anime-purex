@@ -2,10 +2,13 @@
   <div id="user-vue">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" @click="$router.back()" class="mdui-btn mdui-btn-icon"
+        <a
+          href="javascript:;"
+          @click="$emit('back')"
+          class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">arrow_back</i></a
         >
-        <a href="javascript:;" class="mdui-typo-title">{{ user ? '@' + user.name : '' }}</a>
+        <span class="mdui-typo-title">{{ user ? "@" + user.name : "" }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
@@ -16,7 +19,19 @@
     <div class="mdui-container">
       <div class="user-info" v-if="user">
         <user-brief :user="user"></user-brief>
-        <div class="comment" v-html="commentHtml"></div>
+        <div class="comment">
+          <translatable
+            :text="user.comment"
+            :enable="enableTranslate"
+          ></translatable>
+        </div>
+      </div>
+      <div class="translate-control">
+        <div class="control-name">机翻</div>
+        <label class="mdui-switch">
+          <input type="checkbox" v-model="enableTranslate" />
+          <i class="mdui-switch-icon"></i>
+        </label>
       </div>
       <illust-list ref="illustList" :user="userId"></illust-list>
     </div>
@@ -26,6 +41,7 @@
 import IllustList from '../components/IllustList.vue'
 import MoreVert from '../components/MoreVert.vue'
 import UserBrief from '../components/UserBrief.vue'
+import Translatable from '../components/Translatable.vue'
 import common from '@/common.vue'
 import mdui from 'mdui'
 const $ = mdui.$
@@ -41,17 +57,16 @@ export default {
   components: {
     IllustList,
     MoreVert,
-    UserBrief
+    UserBrief,
+    Translatable
   },
   data: () => ({
-    user: null
+    user: null,
+    enableTranslate: false
   }),
   computed: {
     userId () {
       return this.$route.params.id
-    },
-    commentHtml () {
-      return this.user.comment.replaceAll('\n', '<br>')
     }
   },
   methods: {
@@ -84,4 +99,17 @@ export default {
     word-wrap: break-word;
   }
 }
+.translate-control {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    .control-name {
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-right: 15px;
+    }
+    .mdui-switch {
+      padding-right: 5px;
+    }
+  }
 </style>

@@ -2,10 +2,10 @@
   <div id="favorited-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" @click="$router.back()" class="mdui-btn mdui-btn-icon"
+        <a href="javascript:;" @click="$emit('back')" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">arrow_back</i></a
         >
-        <a href="javascript:;" class="mdui-typo-title">收藏/关注</a>
+        <span class="mdui-typo-title">收藏/关注</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link

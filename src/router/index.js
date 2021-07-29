@@ -6,6 +6,8 @@ import Search from '../views/Search.vue'
 import Favorited from '../views/Favorited.vue'
 import Tag from '../views/Tag.vue'
 import User from '../views/User.vue'
+import About from '../views/About.vue'
+import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +41,20 @@ const routes = [
     path: '/users/:id',
     name: 'User',
     component: User
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About
+  },
+  {
+    name: '404',
+    path: '/404',
+    component: NotFound
+  },
+  {
+    path: '*',
+    redirect: '/404'
   }
 ]
 

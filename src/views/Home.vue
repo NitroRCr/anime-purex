@@ -2,7 +2,7 @@
   <div class="home">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" class="mdui-typo-title">PureX</a>
+        <span class="mdui-typo-title">PureX</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
@@ -45,6 +45,7 @@ export default {
   }),
   activated () {
     $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
+    sessionStorage.homeAccessed = true
     mdui.mutation()
   },
   deactivated () {

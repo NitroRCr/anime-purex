@@ -14,6 +14,9 @@
       <li class="mdui-menu-item">
         <a href="javascript:;" class="mdui-ripple" mdui-dialog="{target: '#dialog-theme'}">主题颜色</a>
       </li>
+      <li class="mdui-menu-item">
+        <router-link to="/about" class="mdui-ripple">关于</router-link>
+      </li>
     </ul>
   </div>
 </template>

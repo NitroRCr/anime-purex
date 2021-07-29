@@ -4,13 +4,13 @@
       <div class="mdui-toolbar mdui-color-theme">
         <a
           href="javascript:;"
-          @click="$router.back()"
+          @click="$emit('back')"
           class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">arrow_back</i></a
         >
-        <a href="javascript:;" class="mdui-typo-title">{{
+        <span class="mdui-typo-title">{{
           illust ? illust.title : ""
-        }}</a>
+        }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
@@ -26,7 +26,7 @@
       >
         <div class="illust">
           <div class="large-image">
-            <img :src="currImage" class="large-img" />
+            <img :src="currImage" :style="imgScaleStyle" class="large-img" />
           </div>
         </div>
         <div class="illust-info">
@@ -36,7 +36,12 @@
               :urls="illust.image_urls[currp]"
               :fname-prefix="`${illust.title}_p${currp}`"
             ></download-image>
-            <span>{{ illust.title }}</span>
+            <span
+              ><translatable
+                :text="illust.title"
+                :enable="enableTranslate"
+              ></translatable
+            ></span>
             <origin-url :illust="illust"></origin-url>
           </div>
           <div class="mdui-divider"></div>
@@ -45,10 +50,31 @@
             v-if="illust.image_urls.length > 1"
             @click="changeImage"
           ></image-list>
-          <div
-            class="illust-caption mdui-text-color-text"
-            v-html="illust.caption"
-          ></div>
+          <div class="mdui-divider" v-if="illust.image_urls.length > 1"></div>
+          <div class="illust-control">
+            <div class="control-name">放大</div>
+            <label class="mdui-slider scale-control">
+              <input
+                type="range"
+                step="0.1"
+                min="0"
+                max="100"
+                v-model="inputScale"
+              />
+            </label>
+            <div class="control-name">机翻</div>
+            <label class="mdui-switch">
+              <input type="checkbox" v-model="enableTranslate" />
+              <i class="mdui-switch-icon"></i>
+            </label>
+          </div>
+          <div class="mdui-divider" v-if="illust.image_urls.length > 1"></div>
+          <div class="illust-caption mdui-text-color-text">
+            <translatable
+              :html="illust.caption"
+              :enable="enableTranslate"
+            ></translatable>
+          </div>
           <div class="illust-tags mdui-text-color-theme">
             <router-link
               :to="`/tags/${tag}`"
@@ -84,6 +110,7 @@ import DownloadImage from '../components/DownloadImage.vue'
 import MoreVert from '../components/MoreVert.vue'
 import UserBrief from '../components/UserBrief.vue'
 import OriginUrl from '../components/OriginUrl.vue'
+import Translatable from '../components/Translatable.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
 const $ = mdui.$
@@ -95,13 +122,16 @@ export default {
     DownloadImage,
     MoreVert,
     UserBrief,
-    OriginUrl
+    OriginUrl,
+    Translatable
   },
   data: () => ({
     illust: null,
     largeLoaded: false,
     common,
-    currp: 0
+    currp: 0,
+    inputScale: 0,
+    enableTranslate: false
   }),
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')
@@ -116,6 +146,9 @@ export default {
       if (common.cachedIllusts[id]) {
         this.illust = common.cachedIllusts[id]
         this.loadLarge()
+        this.$nextTick(() => {
+          mdui.mutation()
+        })
         return
       }
       $.ajax({
@@ -127,6 +160,9 @@ export default {
           common.cachedIllusts[id] = illust
           common.cachedUsers[illust.user.id] = illust.user
           this.loadLarge()
+          this.$nextTick(() => {
+            mdui.mutation()
+          })
         },
         error: (jqXHR, textStatus, errorThrown) => {
           mdui.snackbar(`插画获取失败: ${textStatus}`)
@@ -157,6 +193,12 @@ export default {
     publishDate () {
       const date = new Date(this.illust.publish_time * 1e3)
       return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    },
+    imgScaleStyle () {
+      const maxScale = 3
+      return {
+        transform: `scale(${maxScale ** (this.inputScale / 100)})`
+      }
     }
   }
 }
@@ -207,6 +249,7 @@ export default {
   }
   .illust {
     .large-image {
+      overflow: auto;
       img {
         width: 100%;
         display: block;
@@ -226,11 +269,25 @@ export default {
         float: right;
       }
     }
-    .illust-caption {
-      margin: 14px 0;
-      a {
-        display: inline-block;
+    .illust-control {
+      display: flex;
+      align-items: center;
+      margin: 5px;
+      .control-name {
+        font-weight: bold;
+        flex-shrink: 0;
+        margin-right: 10px;
       }
+      .scale-control {
+        margin-right: 20px;
+      }
+      .mdui-switch {
+        padding-right: 5px;
+      }
+    }
+    .illust-caption {
+      margin: 14px 5px;
+      word-break: break-word;
     }
     .illust-tags {
       margin: 10px 5px;
