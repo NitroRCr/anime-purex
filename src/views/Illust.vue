@@ -21,7 +21,7 @@
     <div class="container" :class="common.screenSize">
       <div
         class="illust-container mdui-shadow-4"
-        :class="common.screenSize"
+        :class="[common.screenSize, {'dual-col': ifDualCol}]"
         v-if="illust"
       >
         <div class="illust">
@@ -50,7 +50,7 @@
             v-if="illust.image_urls.length > 1"
             @click="changeImage"
           ></image-list>
-          <div class="mdui-divider" v-if="illust.image_urls.length > 1"></div>
+          <div class="mdui-divider" v-if="illust.image_urls.length === 2"></div>
           <div class="illust-control">
             <div class="control-name">放大</div>
             <label class="mdui-slider scale-control">
@@ -199,6 +199,24 @@ export default {
       return {
         transform: `scale(${maxScale ** (this.inputScale / 100)})`
       }
+    },
+    ifDualCol () {
+      let aspectRadio = this.illust.aspectRadio
+      if (!aspectRadio) {
+        aspectRadio = 9 / 16
+      }
+      switch (this.common.screenSize) {
+        case 'xs':
+        case 'sm':
+          return false
+        case 'md':
+        case 'lg':
+        case 'xl':
+          if (aspectRadio >= 4 / 3) return false
+          else return true
+        default:
+          return true
+      }
     }
   }
 }
@@ -230,21 +248,21 @@ export default {
     margin-top: 0;
   }
   &.xs,
-  &.sm {
+  &:not(.dual-col) {
     flex-direction: column;
     .illust {
       width: 100%;
     }
   }
-  &.md,
-  &.lg,
-  &.xl {
+  &.dual-col {
     flex-direction: row;
     .illust {
       border-right: rgba(0, 0, 0, 0.12) 1px solid;
+      flex-grow: 1;
     }
     .illust-info {
-      width: calc(200px + 20vw);
+      width: calc(100px + 20vw);
+      flex-shrink: 0;
     }
   }
   .illust {
@@ -253,6 +271,7 @@ export default {
       img {
         width: 100%;
         display: block;
+        transform-origin: top left;
       }
     }
   }

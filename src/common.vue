@@ -13,6 +13,89 @@ const APIType = {
   PIXIV: 0
 }
 const apiHost = 'https://apapi.krytro.com:1443'
+const youdao = {
+  appKey: '',
+  key: ''
+}
+const ajax = function (params) {
+  params = params || {}
+  params.data = params.data || {}
+  params.jsonp ? jsonp(params) : json(params)
+  function json (params) {
+    params.method = (params.method || 'GET').toUpperCase()
+    const urlData = formatParams(params.data)
+    const xhr = new window.XMLHttpRequest()
+    const headers = params.headers || {}
+    if (params.method === 'GET') {
+      xhr.open(params.method, params.url + '?' + urlData, true)
+      setHeaders(xhr, headers)
+      xhr.send(null)
+    } else {
+      xhr.open(params.method, params.url, true)
+      setHeaders(xhr, headers)
+      xhr.send(JSON.stringify(params.data))
+    }
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        const status = xhr.status
+        if (status >= 200 && status < 300) {
+          let response = ''
+          const type = xhr.getResponseHeader('Content-Type')
+          if (type.indexOf('xml') !== -1 && xhr.responseXML) {
+            response = xhr.responseXML
+          } else if (type.indexOf('application/json') !== -1) {
+            response = JSON.parse(xhr.responseText)
+          } else {
+            response = xhr.responseText
+          }
+          params.success && params.success(response)
+        } else {
+          params.error && params.error(status)
+        }
+      }
+    }
+  }
+  function jsonp (params) {
+    const callbackName = params.jsonp
+    const head = document.getElementsByTagName('head')[0]
+    params.data.callback = callbackName
+    const data = formatParams(params.data)
+    const script = document.createElement('script')
+    head.appendChild(script)
+    window[callbackName] = function (json) {
+      head.removeChild(script)
+      clearTimeout(script.timer)
+      window[callbackName] = null
+      params.success && params.success(json)
+    }
+    script.src = params.url + '?' + data
+    if (params.timeout) {
+      script.timer = setTimeout(function () {
+        window[callbackName] = null
+        head.removeChild(script)
+        params.error && params.error({
+          message: '超时'
+        })
+      }, params.timeout)
+    }
+  }
+  function formatParams (data) {
+    const arr = []
+    for (const key in data) {
+      arr.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    }
+    arr.push('v=' + random())
+    return arr.join('&')
+  }
+  function random () {
+    return Math.floor(Math.random() * 10000 + 500)
+  }
+  function setHeaders (xhr, headers) {
+    for (const key in headers) {
+      xhr.setRequestHeader(key, headers[key])
+    }
+  }
+}
 const webpSupported = (function () {
   try {
     return document.createElement('canvas').toDataURL('image/webp', 0.5).indexOf('data:image/webp') === 0
@@ -73,6 +156,8 @@ const evaluators = [
 ]
 const common = {
   apiHost,
+  youdao,
+  ajax,
   IllustSort,
   AgeLimit,
   APIType,

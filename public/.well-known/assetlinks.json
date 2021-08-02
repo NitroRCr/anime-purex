@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "com.krytro.purex.twa",
+                   "sha256_cert_fingerprints": ["7D:77:B2:13:33:B5:21:88:74:E7:F3:A8:F2:66:63:B9:22:AD:A3:66:EF:9A:5B:13:8B:01:E6:8B:B1:D6:97:DA"] }
+    }]

@@ -4,7 +4,12 @@
 <script>
 import common from '@/common.vue'
 import mdui from 'mdui'
-const $ = mdui.$
+import CryptoJS from 'crypto-js'
+function truncate (q) {
+  var len = q.length
+  if (len <= 20) return q
+  return q.substring(0, 10) + len + q.substring(len - 10, len)
+}
 export default {
   name: 'Translatable',
   props: ['text', 'html', 'enable'],
@@ -40,34 +45,46 @@ export default {
       } else {
         text = this.text
       }
-      $.ajax({
-        url: common.apiHost + '/translate',
+      const origins = text.split('\n')
+      const youdao = common.youdao
+      const salt = Math.random().toString(16).substring(2)
+      const curtime = Math.round(new Date().getTime() / 1000)
+      const str1 = youdao.appKey + truncate(text) + salt + curtime + youdao.key
+      const sign = CryptoJS.SHA256(str1).toString(CryptoJS.enc.Hex)
+      common.ajax({
+        url: 'https://openapi.youdao.com/api',
+        jsonp: `callback${Math.random().toString(16).substring(2)}`,
         data: {
-          doctype: 'json',
-          type: 'JA2ZH_CN',
-          i: text
+          q: text,
+          appKey: youdao.appKey,
+          salt: salt,
+          from: 'auto',
+          to: 'zh-CHS',
+          sign: sign,
+          signType: 'v3',
+          curtime: curtime
         },
-        dataType: 'json',
-        contentType: 'application/x-www-form-urlencoded;',
-        timeout: 5000
-      }).then(resp => {
-        if (resp.errorCode === 0) {
-          let html = this.html || this.text.split('\n').join('<br>')
-          for (const result of resp.translateResult) {
-            for (const trans of result) {
-              html = html.replace(trans.src, trans.tgt)
+        timeout: 5000,
+        success: resp => {
+          if (resp.errorCode === '0') {
+            let html = this.html || this.text.split('\n').join('<br>')
+            const trans = resp.translation[0].split('\n')
+            for (const i in trans) {
+              if (trans[i] === '') continue
+              html = html.replace(origins[i], trans[i])
             }
+            this.translated = html
+          } else {
+            mdui.snackbar('翻译失败')
+            console.log('translate failed')
+            console.log(resp)
           }
-          this.translated = html
-        } else {
+        },
+        error: reason => {
           mdui.snackbar('翻译失败')
           console.log('translate failed')
-          console.log(resp)
+          console.log(reason)
         }
-      }).catch(reason => {
-        mdui.snackbar('翻译失败')
-        console.log('translate failed')
-        console.log(reason)
       })
     }
   },

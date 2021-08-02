@@ -23,7 +23,8 @@
               </select>
             </div>
           </div>
-          <div class="age-select">
+          <!-- Disable R-18 -->
+          <div class="age-select" v-if="false">
             <div class="panel-sub-title">年龄限制</div>
             <div class="select-container">
               <select class="mdui-select" mdui-select v-model="ageLimit">
@@ -96,10 +97,7 @@
           @click.self="$router.push(`/illusts/${illust.id}`)"
           class="image mdui-hoverable"
           :style="{
-            backgroundImage: `url(${common.getImageUrl(
-              illust.image_urls[0],
-              'medium'
-            )})`,
+            backgroundImage: `url(${getMediumImage(illust)})`,
           }"
         >
           <favorite :illust="illust"></favorite>
@@ -138,7 +136,7 @@ export default {
     presetTag: { default: null },
     originEvals: { default: () => [] },
     originSort: { default: common.IllustSort.DEFAULT },
-    originAgeLimit: { default: null },
+    originAgeLimit: { default: common.AgeLimit.ALL_AGE },
     user: { default: null },
     staticIllusts: { default: null }
   },
@@ -230,6 +228,15 @@ export default {
       this.waiting = false
       this.noMore = false
       this.getIllusts()
+    },
+    getMediumImage (illust) {
+      const src = common.getImageUrl(illust.image_urls[0], 'medium')
+      const img = new Image()
+      img.onload = event => {
+        illust.aspectRadio = event.target.width / event.target.height
+      }
+      img.src = src
+      return src
     }
   },
   computed: {
