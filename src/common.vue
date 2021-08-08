@@ -144,6 +144,14 @@ const getScreenSize = () => {
   if (innerWidth <= 1920) return 'lg'
   else return 'xl'
 }
+const copyText = function (content) {
+  var aux = document.createElement('input')
+  aux.setAttribute('value', content)
+  document.body.appendChild(aux)
+  aux.select()
+  document.execCommand('copy')
+  document.body.removeChild(aux)
+}
 setInterval(() => {
   common.screenSize = getScreenSize()
 }, 200)
@@ -166,6 +174,7 @@ const common = {
   cachedUsers,
   getImageUrl,
   screenSize: getScreenSize(),
+  copyText,
   evaluators
 }
 const localDataVer = '2'

@@ -43,7 +43,7 @@ export default {
     UserList
   },
   data: () => ({
-    illusts: JSON.parse(localStorage.favoritedList),
+    illusts: JSON.parse(localStorage.favoritedList).reverse(),
     users: JSON.parse(localStorage.followings)
   }),
   mounted () {
