@@ -83,8 +83,8 @@
         </div>
         <illust-list
           ref="illustList"
-          v-if="$root.defaultFavList"
-          :ids="$root.defaultFavList.ids"
+          v-if="favList"
+          :ids="favList.ids"
         ></illust-list>
       </div>
     </div>
@@ -163,6 +163,18 @@ export default {
     listNewName: '',
     listOriginName: ''
   }),
+  computed: {
+    favList () { return this.$root.defaultFavList }
+  },
+  watch: {
+    favList (newList, oldList) {
+      if (oldList && newList && oldList.name !== newList.name) {
+        this.$nextTick(() => {
+          this.$refs.illustList.refresh()
+        })
+      }
+    }
+  },
   methods: {
     getFavorite () {
       const session = JSON.parse(localStorage.session)
@@ -261,6 +273,7 @@ export default {
   margin-top: 15px;
   .mdui-panel-item-title {
     text-overflow: clip;
+    min-width: 150px;
     .panel-title {
       margin-left: 10px;
       font-weight: bold;

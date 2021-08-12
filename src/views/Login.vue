@@ -19,69 +19,71 @@
       </div>
     </div>
     <div class="page-content">
-      <div class="login-paper mdui-shadow-3">
-        <div class="logo-img">
-          <img src="/img/icons/px-maskable-150x150.png" />
-        </div>
-        <div class="login-title">
-          {{ mode === "login" ? "登录 PureX" : "注册 PureX" }}
-        </div>
-        <form @submit.prevent="submit">
-          <div class="mdui-textfield mdui-textfield-floating-label">
-            <label class="mdui-textfield-label">用户名</label>
-            <input
-              class="mdui-textfield-input"
-              type="text"
-              required
-              pattern=".{1,16}"
-              v-model="form.name"
-            />
-            <div class="mdui-textfield-error">用户名长度为1~16</div>
+      <div class="mdui-container">
+        <div class="login-paper mdui-shadow-3">
+          <div class="logo-img">
+            <img src="/img/icons/px-maskable-150x150.png" />
           </div>
+          <div class="login-title">
+            {{ mode === "login" ? "登录 PureX" : "注册 PureX" }}
+          </div>
+          <form @submit.prevent="submit">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+              <label class="mdui-textfield-label">用户名</label>
+              <input
+                class="mdui-textfield-input"
+                type="text"
+                required
+                pattern=".{1,16}"
+                v-model="form.name"
+              />
+              <div class="mdui-textfield-error">用户名长度为1~16</div>
+            </div>
 
-          <div class="mdui-textfield mdui-textfield-floating-label">
-            <label class="mdui-textfield-label">密码</label>
-            <input
-              class="mdui-textfield-input"
-              type="password"
-              pattern="^.*(?=.{6,})(?=.*[A-z]).*$"
-              required
-              v-model="form.password"
-            />
-            <div class="mdui-textfield-error">密码至少 6 位，且包含字母</div>
-          </div>
-          <div
-            v-if="mode === 'register'"
-            class="mdui-textfield mdui-textfield-floating-label"
-          >
-            <label class="mdui-textfield-label">确认密码</label>
-            <input
-              class="mdui-textfield-input"
-              type="password"
-              required
-              v-model="form.confirm"
-            />
-            <div class="mdui-textfield-error">请再次输入密码</div>
-          </div>
-          <button
-            type="submit"
-            class="
-              mdui-btn-raised
-              mdui-btn
-              mdui-btn-block
-              mdui-color-theme-accent
-              mdui-ripple
-            "
-            :class="{ disabled: waiting }"
-          >
-            {{ mode === "login" ? "登录" : "注册" }}
-          </button>
-          <div class="bottom-btn mdui-text-color-theme-accent">
-            &nbsp;<a href="javascript:;" @click="toggleMode">{{
-              mode === "login" ? "注册账号" : "返回登录"
-            }}</a>
-          </div>
-        </form>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+              <label class="mdui-textfield-label">密码</label>
+              <input
+                class="mdui-textfield-input"
+                type="password"
+                pattern="^.*(?=.{6,})(?=.*[A-z]).*$"
+                required
+                v-model="form.password"
+              />
+              <div class="mdui-textfield-error">密码至少 6 位，且包含字母</div>
+            </div>
+            <div
+              v-if="mode === 'register'"
+              class="mdui-textfield mdui-textfield-floating-label"
+            >
+              <label class="mdui-textfield-label">确认密码</label>
+              <input
+                class="mdui-textfield-input"
+                type="password"
+                required
+                v-model="form.confirm"
+              />
+              <div class="mdui-textfield-error">请再次输入密码</div>
+            </div>
+            <button
+              type="submit"
+              class="
+                mdui-btn-raised
+                mdui-btn
+                mdui-btn-block
+                mdui-color-theme-accent
+                mdui-ripple
+              "
+              :class="{ disabled: waiting }"
+            >
+              {{ mode === "login" ? "登录" : "注册" }}
+            </button>
+            <div class="bottom-btn mdui-text-color-theme-accent">
+              &nbsp;<a href="javascript:;" @click="toggleMode">{{
+                mode === "login" ? "注册账号" : "返回登录"
+              }}</a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
