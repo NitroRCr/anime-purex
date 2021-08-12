@@ -2,17 +2,10 @@
   <button class="favorite-btn mdui-btn-icon mdui-btn" @click="toggle()" :style="style"><i class="mdui-icon material-icons">{{ icon }}</i></button>
 </template>
 <script>
-import mdui from 'mdui'
 export default {
   name: 'Favorite',
   props: {
     illust: { required: true }
-  },
-  data: function () {
-    return { favorited: this.isFavorited() }
-  },
-  activated () {
-    this.favorited = this.isFavorited()
   },
   computed: {
     style () {
@@ -24,38 +17,28 @@ export default {
     },
     icon () {
       return this.favorited ? 'favorite' : 'favorite_border'
+    },
+    favorited () {
+      if (!this.$root.defaultFavList) return false
+      return this.$root.defaultFavList.ids.indexOf(this.illust.id) !== -1
     }
   },
   methods: {
-    isFavorited () {
-      if (this.indexOf(this.illust.id) === -1) {
-        return false
-      } else {
-        return true
-      }
-    },
     toggle () {
-      const favorited = this.isFavorited()
-      const list = JSON.parse(localStorage.favoritedList)
-      if (favorited) {
-        list.splice(this.indexOf(this.illust.id), 1)
-        this.favorited = false
-      } else {
-        if (list.length >= 1000) {
-          mdui.snackbar('图片太多，装不下了~')
-          return
+      if (!this.$root.xuser) this.$router.push('/login')
+      if (!this.$root.defaultFavList) {
+        this.$root.toCreateList()
+        return
+      }
+      this.$root.getXuserData().then(() => {
+        const list = this.$root.defaultFavList.ids
+        if (this.favorited) {
+          list.splice(list.indexOf(this.illust.id), 1)
+        } else {
+          list.push(this.illust.id)
         }
-        list.push(this.illust)
-        this.favorited = true
-      }
-      localStorage.favoritedList = JSON.stringify(list)
-    },
-    indexOf (illustId) {
-      const list = JSON.parse(localStorage.favoritedList)
-      for (const i in list) {
-        if (list[i].id === illustId) return i
-      }
-      return -1
+        this.$root.putXuserData()
+      })
     }
   }
 }

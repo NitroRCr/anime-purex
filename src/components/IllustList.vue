@@ -1,11 +1,11 @@
 <template>
   <div class="illust-list-container">
-    <div class="mdui-panel" v-if="!staticIllusts" mdui-panel>
+    <div class="mdui-panel" v-if="!ids" mdui-panel>
       <div class="mdui-panel-item">
         <div class="mdui-panel-item-header">
           <div class="mdui-panel-item-title">
             <i class="material-icons mdui-icon">sort</i
-            ><span class="options">选项</span>
+            ><span class="panel-title">选项</span>
           </div>
           <i class="mdui-panel-item-arrow mdui-icon material-icons"
             >keyboard_arrow_down</i
@@ -15,7 +15,11 @@
           <div class="sort-select">
             <div class="panel-sub-title">排列顺序</div>
             <div class="select-container">
-              <select class="mdui-select" mdui-select="{ position: 'bottom' }" v-model="sort">
+              <select
+                class="mdui-select"
+                mdui-select="{ position: 'bottom' }"
+                v-model="sort"
+              >
                 <option :value="common.IllustSort.RANDOM">随机</option>
                 <option :value="common.IllustSort.DEFAULT">最相关</option>
                 <option :value="common.IllustSort.LIKES">最热门</option>
@@ -62,7 +66,9 @@
           <div class="tag-select">
             <div class="panel-sub-title">标签过滤</div>
             <ul class="mdui-list">
-              <li class="mdui-list-item" v-if="collectedTags.length === 0">你还没有收藏的标签哦</li>
+              <li class="mdui-list-item" v-if="collectedTags.length === 0">
+                你还没有收藏的标签哦
+              </li>
               <li
                 class="mdui-list-item"
                 v-for="tag of collectedTags"
@@ -73,11 +79,7 @@
                   {{ tag }}
                 </div>
                 <label class="mdui-switch">
-                  <input
-                    type="checkbox"
-                    :value="tag"
-                    v-model="inputTags"
-                  />
+                  <input type="checkbox" :value="tag" v-model="inputTags" />
                   <i class="mdui-switch-icon"></i>
                 </label>
               </li>
@@ -89,7 +91,7 @@
     <div class="illust-list">
       <div
         class="illust mdui-text-color-theme-text"
-        v-for="(illust, index) in (staticIllusts || illusts)"
+        v-for="(illust, index) in illusts"
         :key="index"
         :style="illustStyle"
       >
@@ -113,13 +115,15 @@
                 })`,
               }"
             ></div>
-            <div class="user-name mdui-text-color-theme-secondary">{{ illust.user.name }}</div>
+            <div class="user-name mdui-text-color-theme-secondary">
+              {{ illust.user.name }}
+            </div>
           </a>
         </div>
       </div>
     </div>
-    <illust-loader @load="getIllusts" v-if="!noMore && !staticIllusts"></illust-loader>
-    <div class="no-more" v-if="noMore || staticIllusts">没有更多了...</div>
+    <illust-loader @load="getIllusts" v-if="!noMore"></illust-loader>
+    <div class="no-more" v-if="noMore">没有更多了...</div>
   </div>
 </template>
 <script>
@@ -138,7 +142,7 @@ export default {
     originSort: { default: common.IllustSort.DEFAULT },
     originAgeLimit: { default: common.AgeLimit.ALL_AGE },
     user: { default: null },
-    staticIllusts: { default: null }
+    ids: { default: null }
   },
   components: {
     IllustLoader,
@@ -171,19 +175,25 @@ export default {
   },
   methods: {
     getIllusts () {
-      if (this.staticIllusts || this.waiting || this.noMore) {
+      if (this.waiting || this.noMore) {
         return
       }
       this.waiting = true
+      const search = JSON.stringify(this.ids
+        ? {
+          ids: this.ids.reverse(),
+          limit: this.limit,
+          offset: this.offset
+        } : {
+          limit: this.limit,
+          offset: this.offset,
+          sort: this.sort,
+          query: this.query
+        })
       $.ajax({
         url: common.apiHost + '/illusts',
         data: {
-          search: JSON.stringify({
-            limit: this.limit,
-            offset: this.offset,
-            sort: this.sort,
-            query: this.query
-          })
+          search
         },
         dataType: 'json',
         timeout: 10000,
@@ -302,12 +312,13 @@ export default {
     margin-top: 5px;
     font-weight: bold;
   }
-  .sort-select, .age-select {
+  .sort-select,
+  .age-select {
     .select-container {
       padding: 10px 16px;
     }
   }
-  span.options {
+  .panel-title {
     margin-left: 10px;
     font-weight: bold;
     transform: translateY(0.1em);

@@ -47,13 +47,13 @@ export default {
       }
       const origins = text.split('\n')
       const youdao = common.youdao
-      const salt = Math.random().toString(16).substring(2)
+      const salt = Math.random().toString(36).slice(-8)
       const curtime = Math.round(new Date().getTime() / 1000)
       const str1 = youdao.appKey + truncate(text) + salt + curtime + youdao.key
       const sign = CryptoJS.SHA256(str1).toString(CryptoJS.enc.Hex)
       common.ajax({
         url: 'https://openapi.youdao.com/api',
-        jsonp: `callback${Math.random().toString(16).substring(2)}`,
+        jsonp: `callback${Math.random().toString(36).slice(-8)}`,
         data: {
           q: text,
           appKey: youdao.appKey,

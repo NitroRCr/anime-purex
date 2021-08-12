@@ -47,11 +47,11 @@ import mdui from 'mdui'
 const $ = mdui.$
 export default {
   name: 'User',
-  mounted () {
+  activated () {
     $('body').addClass('mdui-appbar-with-toolbar')
     this.getUser()
   },
-  beforeDestroy () {
+  deactivated () {
     $('body').removeClass('mdui-appbar-with-toolbar')
   },
   components: {

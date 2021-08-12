@@ -182,8 +182,6 @@ if (localStorage.localDataVer !== localDataVer) {
   localStorage.clear()
   localStorage.localDataVer = localDataVer
 }
-if (!localStorage.favoritedList) localStorage.favoritedList = JSON.stringify([])
 if (!localStorage.collectedTags) localStorage.collectedTags = JSON.stringify([])
-if (!localStorage.followings) localStorage.followings = JSON.stringify([])
 export default common
 </script>

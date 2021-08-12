@@ -2,7 +2,7 @@
   <div class="mdui-dialog" id="dialog-theme">
     <div class="mdui-dialog-title">设置主题</div>
     <div class="mdui-dialog-content">
-      <p class="mdui-typo-title">主题色</p>
+      <p class="mdui-typo-title">外观</p>
       <div class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3">
         <div class="mdui-col">
           <label class="mdui-radio mdui-m-b-1">
@@ -41,7 +41,7 @@
           </label>
         </div>
       </div>
-      <p class="mdui-typo-title mdui-text-color-theme">外观</p>
+      <p class="mdui-typo-title mdui-text-color-theme">主题色</p>
       <form class="mdui-row-xs-1 mdui-row-sm-2 mdui-row-md-3">
         <div class="mdui-col mdui-text-color-amber">
           <label class="mdui-radio mdui-m-b-1">

@@ -19,7 +19,6 @@
 </template>
 <script>
 import OriginUrl from './OriginUrl.vue'
-import mdui from 'mdui'
 import common from '@/common.vue'
 export default {
   name: 'UserBrief',
@@ -31,12 +30,8 @@ export default {
   },
   data: function () {
     return {
-      followed: this.isFollowed(),
       common
     }
-  },
-  activated () {
-    this.followed = this.isFollowed()
   },
   methods: {
     isFollowed () {
@@ -47,27 +42,22 @@ export default {
       }
     },
     toggle () {
-      const followed = this.isFollowed()
-      const list = JSON.parse(localStorage.followings)
-      if (followed) {
-        list.splice(this.indexOf(this.user.id), 1)
-        this.followed = false
-      } else {
-        if (list.length >= 1000) {
-          mdui.snackbar('关注太多，装不下了~')
-          return
+      this.$root.getXuserData().then(() => {
+        const list = this.$root.following
+        if (this.followed) {
+          list.splice(list.indexOf(this.user.id), 1)
+        } else {
+          list.push(this.user.id)
         }
-        list.push(this.user)
-        this.followed = true
-      }
-      localStorage.followings = JSON.stringify(list)
-    },
-    indexOf (userId) {
-      const list = JSON.parse(localStorage.followings)
-      for (const i in list) {
-        if (list[i].id === userId) return i
-      }
-      return -1
+        this.$root.putXuserData()
+      })
+    }
+  },
+  computed: {
+    followed () {
+      const list = this.$root.following
+      if (!list) return false
+      return list.indexOf(this.user.id) !== -1
     }
   }
 }
