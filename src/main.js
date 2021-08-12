@@ -41,7 +41,7 @@ new Vue({
         $.ajax({
           url: `${common.apiHost}/xusers/${this.xuser.name}`,
           headers: {
-            token: this.xuser.token
+            Authorization: this.xuser.token
           },
           dataType: 'json',
           timeout: 10000,
@@ -79,7 +79,7 @@ new Vue({
             following: JSON.stringify(this.following)
           },
           headers: {
-            token: this.xuser.token
+            Authorization: this.xuser.token
           },
           dataType: 'json',
           timeout: 10000,

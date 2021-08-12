@@ -205,8 +205,25 @@ export default {
         const favorited = this.$root.favorited
         const list = favorited.find(list => list.name === name)
         if (!list) return
-        favorited.splice(favorited.indexOf(list), 1)
-        return this.$root.putXuserData()
+        const index = favorited.indexOf(list)
+        favorited.splice(index, 1)
+        let deleted = true
+        mdui.snackbar({
+          message: '已删除',
+          buttonText: '撤销',
+          onButtonClick: () => {
+            favorited.splice(index, 0, list)
+            deleted = false
+          },
+          onClose: () => {
+            if (deleted) {
+              this.$root.putXuserData().catch(err => {
+                mdui.snackbar('删除失败')
+                console.log(err)
+              })
+            }
+          }
+        })
       }).catch(err => {
         mdui.snackbar('删除失败')
         console.log(err)
