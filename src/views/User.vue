@@ -49,6 +49,7 @@ export default {
   name: 'User',
   activated () {
     $('body').addClass('mdui-appbar-with-toolbar')
+    this.userId = this.$route.params.id
     this.getUser()
   },
   deactivated () {
@@ -62,13 +63,9 @@ export default {
   },
   data: () => ({
     user: null,
-    enableTranslate: false
+    enableTranslate: false,
+    userId: null
   }),
-  computed: {
-    userId () {
-      return this.$route.params.id
-    }
-  },
   methods: {
     getUser () {
       const id = this.userId

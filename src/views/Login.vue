@@ -245,10 +245,10 @@ body.mdui-theme-layout-light {
   @include light-theme;
 }
 body.mdui-theme-layout-auto {
+  @include light-theme;
   @media (prefers-color-scheme: dark) {
     @include dark-theme;
   }
-  @include light-theme;
 }
 .page-content {
   min-height: calc(100vh - 65px);
