@@ -1,5 +1,6 @@
 <template>
   <div id="login">
+    <page-background></page-background>
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
         <a
@@ -90,6 +91,7 @@
 </template>
 <script>
 import MoreVert from '../components/MoreVert.vue'
+import PageBackground from '../components/PageBackground.vue'
 import mdui from 'mdui'
 import common from '../common.vue'
 import sha256 from 'crypto-js/sha256'
@@ -97,7 +99,8 @@ const $ = mdui.$
 export default {
   name: 'Login',
   components: {
-    MoreVert
+    MoreVert,
+    PageBackground
   },
   data: () => ({
     mode: 'login',
@@ -191,6 +194,7 @@ export default {
           this.$root.setXuser(name, token)
           this.$router.replace('/')
           this.$root.putOldData()
+          this.$root.getXuserData()
         },
         error: (xhr, errText, error) => {
           switch (xhr.status) {
@@ -223,9 +227,30 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+@mixin dark-theme {
+  .login-paper {
+    background-color: rgba(#212121, .8);
+  }
+}
+@mixin light-theme {
+  .login-paper {
+    background-color: rgba(#fff, .8);
+  }
+}
+body.mdui-theme-layout-dark {
+  @include dark-theme;
+}
+body.mdui-theme-layout-light {
+  @include light-theme;
+}
+body.mdui-theme-layout-auto {
+  @media (prefers-color-scheme: dark) {
+    @include dark-theme;
+  }
+  @include light-theme;
+}
 .page-content {
-  background-color: #fafafa;
   min-height: calc(100vh - 65px);
   border-top: 1px solid rgba(#000, 0);
   .login-paper {
@@ -233,7 +258,6 @@ export default {
     margin: 16vh auto 24px auto;
     padding: 24px;
     max-width: 400px;
-    background-color: rgba(#ffffff, 0.85);
     .logo-img {
       width: 75px;
       margin: auto;

@@ -1,5 +1,6 @@
 <template>
-  <div class="about">
+  <div id="about">
+    <page-background :mask="true"></page-background>
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
         <a
@@ -40,12 +41,14 @@
 </template>
 <script>
 import MoreVert from '../components/MoreVert.vue'
+import PageBackground from '../components/PageBackground.vue'
 import mdui from 'mdui'
 const $ = mdui.$
 export default {
   name: 'About',
   components: {
-    MoreVert
+    MoreVert,
+    PageBackground
   },
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')
@@ -66,6 +69,8 @@ export default {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .mdui-typo h2 {
+  margin-top: 0;
+  padding-top: 1.2em;
   padding-bottom: 7.2px;
 }
 .developers {

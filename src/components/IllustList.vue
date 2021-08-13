@@ -106,7 +106,7 @@
         </div>
         <div class="illust-info">
           <div class="illust-title">{{ illust.title }}</div>
-          <a class="user-info" :href="`/users/${illust.user.id}`">
+          <router-link class="user-info" :to="`/users/${illust.user.id}`">
             <div
               class="user-avatar"
               :style="{
@@ -118,7 +118,7 @@
             <div class="user-name mdui-text-color-theme-secondary">
               {{ illust.user.name }}
             </div>
-          </a>
+          </router-link>
         </div>
       </div>
     </div>
