@@ -10,18 +10,18 @@
         <more-vert></more-vert>
       </div>
       <div class="mdui-tab mdui-color-theme" mdui-tab>
-        <a href="#random-illusts" class="mdui-ripple mdui-ripple-white">精选</a>
-        <a href="#rank-illusts" class="mdui-ripple mdui-ripple-white">排行</a>
+        <a href="#illusts-illust" class="mdui-ripple mdui-ripple-white">插画</a>
+        <a href="#illusts-manga" class="mdui-ripple mdui-ripple-white">漫画</a>
       </div>
     </div>
-    <div id="random-illusts">
+    <div id="illusts-illust">
       <div class="mdui-container">
-        <illust-list :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']"></illust-list>
+        <illust-list :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']" originType="illust"></illust-list>
       </div>
     </div>
-    <div id="rank-illusts">
+    <div id="illusts-manga">
       <div class="mdui-container">
-        <illust-list :originSort="common.IllustSort.LIKES"></illust-list>
+        <illust-list :originSort="common.IllustSort.RANDOM" originType="manga"></illust-list>
       </div>
     </div>
   </div>

@@ -33,8 +33,9 @@
           <div class="illust-title">
             <favorite :illust="illust"></favorite>
             <download-image
-              :urls="illust.image_urls[currp]"
-              :fname-prefix="`${illust.title}_p${currp}`"
+              :urls="illust.image_urls"
+              :title="illust.title"
+              :currIndex="currp"
             ></download-image>
             <span
               ><translatable
@@ -100,7 +101,6 @@
         </div>
       </div>
     </div>
-    <div style="height: 30px"></div>
   </div>
 </template>
 <script>

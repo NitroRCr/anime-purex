@@ -6,7 +6,7 @@ import common from '@/common.vue'
 import mdui from 'mdui'
 import CryptoJS from 'crypto-js'
 function truncate (q) {
-  var len = q.length
+  const len = q.length
   if (len <= 20) return q
   return q.substring(0, 10) + len + q.substring(len - 10, len)
 }
@@ -65,10 +65,10 @@ export default {
           curtime: curtime
         },
         timeout: 5000,
-        success: resp => {
-          if (resp.errorCode === '0') {
+        success: ({ errorCode, translation }) => {
+          if (errorCode === '0') {
             let html = this.html || this.text.split('\n').join('<br>')
-            const trans = resp.translation[0].split('\n')
+            const trans = translation[0].split('\n')
             for (const i in trans) {
               if (trans[i] === '') continue
               html = html.replace(origins[i], trans[i])
@@ -77,7 +77,7 @@ export default {
           } else {
             mdui.snackbar('翻译失败')
             console.log('translate failed')
-            console.log(resp)
+            console.log(errorCode)
           }
         },
         error: reason => {

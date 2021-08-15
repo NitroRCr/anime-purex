@@ -45,10 +45,10 @@ new Vue({
           },
           dataType: 'json',
           timeout: 10000,
-          success: xuser => {
-            this.favorited = xuser.favorited
-            this.following = xuser.following
-            resolve(xuser)
+          success: ({ favorited, following }) => {
+            this.favorited = favorited
+            this.following = following
+            resolve()
           },
           error: (xhr, errText, error) => {
             switch (xhr.status) {
@@ -84,7 +84,7 @@ new Vue({
           dataType: 'json',
           timeout: 10000,
           success: resp => {
-            resolve(resp)
+            resolve()
           },
           error: (xhr, errText, error) => {
             switch (xhr.status) {

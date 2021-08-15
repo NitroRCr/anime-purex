@@ -5,19 +5,16 @@
     </button>
     <ul class="mdui-menu">
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + urls.original, `${fnamePrefix}_original`)" class="mdui-ripple">原图</a>
+        <a @click="download(common.apiHost + url.original, `${prefix}_original`)" class="mdui-ripple">原图</a>
       </li>
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + urls.large_webp, `${fnamePrefix}_large.webp`)" class="mdui-ripple">高分辨率-webp</a>
+        <a @click="download(common.apiHost + url.large_webp, `${prefix}_large.webp`)" class="mdui-ripple">高清图-webp</a>
       </li>
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + urls.large_jpg, `${fnamePrefix}_large.jpg`)" class="mdui-ripple">高分辨率-jpg</a>
+        <a @click="download(common.apiHost + url.large_jpg, `${prefix}_large.jpg`)" class="mdui-ripple">高清图-jpg</a>
       </li>
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + urls.medium_webp, `${fnamePrefix}_medium.webp`)" class="mdui-ripple">中分辨率-webp</a>
-      </li>
-      <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + urls.medium_jpg, `${fnamePrefix}_medium.jpg`)" class="mdui-ripple">中分辨率-jpg</a>
+        <a v-if="urls.length > 1" @click="downloadAll" class="mdui-ripple">下载全部-webp</a>
       </li>
     </ul>
   </div>
@@ -26,7 +23,7 @@
 import common from '@/common.vue'
 export default {
   name: 'DownloadImage',
-  props: ['urls', 'fnamePrefix'],
+  props: ['urls', 'title', 'currIndex'],
   data: () => ({ common }),
   methods: {
     download (url, fileName) {
@@ -41,6 +38,20 @@ export default {
         a.click()
       }
       x.send()
+    },
+    downloadAll () {
+      for (const i in this.urls) {
+        const url = this.urls[i]
+        this.download(common.apiHost + url.large_webp, `${this.title}_p${i}_large.webp`)
+      }
+    }
+  },
+  computed: {
+    url () {
+      return this.urls[this.currIndex]
+    },
+    prefix () {
+      return `${this.title}_p${this.currIndex}`
     }
   }
 }

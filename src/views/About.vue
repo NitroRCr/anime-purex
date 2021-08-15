@@ -21,7 +21,7 @@
       <div class="mdui-typo">
         <h2>Anime PureX</h2>
         <p>此网站是对pixiv上的图片的整理，旨在分享高质量的二次元图片。非盈利，无广告。<br>
-        所有图片我们都会提供原链接，若仍然侵犯了版权，可联系我删除。</p>
+        所有图片我们都会提供原链接，若仍然侵犯了版权，可联系我删除。<a href="mailto:NitroFire.q@gmail.com">NitroFire.q@gmail.com</a></p>
         <h2>特性</h2>
         <ul>
           <li>基于Vue开发</li>

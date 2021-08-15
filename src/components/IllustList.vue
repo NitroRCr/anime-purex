@@ -27,6 +27,20 @@
               </select>
             </div>
           </div>
+          <div class="type-select">
+            <div class="panel-sub-title">类型</div>
+            <div class="select-container">
+              <select
+                class="mdui-select"
+                mdui-select
+                v-model="type"
+              >
+                <option :value="null">不限</option>
+                <option value="illust">插画</option>
+                <option value="manga">漫画</option>
+              </select>
+            </div>
+          </div>
           <!-- Disable R-18 -->
           <div class="age-select" v-if="false">
             <div class="panel-sub-title">年龄限制</div>
@@ -102,6 +116,7 @@
             backgroundImage: `url(${getMediumImage(illust)})`,
           }"
         >
+          <div class="image-num" v-if="illust.image_urls.length > 1">{{ illust.image_urls.length }}</div>
           <favorite :illust="illust"></favorite>
         </div>
         <div class="illust-info">
@@ -141,6 +156,7 @@ export default {
     originEvals: { default: () => [] },
     originSort: { default: common.IllustSort.DEFAULT },
     originAgeLimit: { default: common.AgeLimit.ALL_AGE },
+    originType: { default: null },
     user: { default: null },
     ids: { default: null }
   },
@@ -170,6 +186,7 @@ export default {
       sort: this.originSort,
       ageLimit: this.originAgeLimit,
       evaluators: this.originEvals,
+      type: this.originType,
       limit: 20
     }
   },
@@ -289,10 +306,13 @@ export default {
         query.passed_evals = this.evaluators
       }
       query.sort = this.sort
-      if (this.ageLimit !== null) {
+      if (this.ageLimit != null) {
         query.age_limit = this.ageLimit
       }
-      if (this.user !== null) {
+      if (this.type != null) {
+        query.type = this.type
+      }
+      if (this.user != null) {
         query.user = this.user
       }
       return query
@@ -312,11 +332,8 @@ export default {
     margin-top: 5px;
     font-weight: bold;
   }
-  .sort-select,
-  .age-select {
-    .select-container {
-      padding: 10px 16px;
-    }
+  .select-container {
+    padding: 10px 16px;
   }
   .panel-title {
     margin-left: 10px;
@@ -339,8 +356,18 @@ export default {
       height: 0;
       background-size: cover;
       background-position: center;
-      border-radius: 5%;
+      border-radius: 10px;
       position: relative;
+      .image-num {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        border-radius: 10px;
+        background-color: rgba(#000, .2);
+        padding: 5px;
+        color: white;
+        font-weight: bold;
+      }
       .favorite-btn {
         color: white;
         position: absolute;
