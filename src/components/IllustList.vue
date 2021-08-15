@@ -363,8 +363,8 @@ export default {
         top: 5px;
         right: 5px;
         border-radius: 10px;
-        background-color: rgba(#000, .2);
-        padding: 5px;
+        background-color: rgba(#000, .25);
+        padding: 3px 5px;
         color: white;
         font-weight: bold;
       }

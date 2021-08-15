@@ -70,13 +70,13 @@
             </label>
           </div>
           <div class="mdui-divider" v-if="illust.image_urls.length > 1"></div>
-          <div class="illust-caption mdui-text-color-text">
+          <div class="illust-caption mdui-text-color-text mdui-typo">
             <translatable
               :html="illust.caption"
               :enable="enableTranslate"
             ></translatable>
           </div>
-          <div class="illust-tags mdui-text-color-theme">
+          <div class="illust-tags mdui-typo">
             <router-link
               :to="`/tags/${tag}`"
               class="illust-tag"
