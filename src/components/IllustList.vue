@@ -198,7 +198,7 @@ export default {
       this.waiting = true
       const search = JSON.stringify(this.ids
         ? {
-          ids: this.ids.reverse(),
+          ids: this.ids.slice().reverse(),
           limit: this.limit,
           offset: this.offset
         } : {

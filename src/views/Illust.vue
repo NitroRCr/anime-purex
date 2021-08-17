@@ -8,9 +8,7 @@
           class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">arrow_back</i></a
         >
-        <span class="mdui-typo-title">{{
-          illust ? illust.title : ""
-        }}</span>
+        <span class="mdui-typo-title">{{ illust ? illust.title : "" }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
           ><i class="mdui-icon material-icons">search</i></router-link
@@ -21,7 +19,7 @@
     <div class="container" :class="common.screenSize">
       <div
         class="illust-container mdui-shadow-4"
-        :class="[common.screenSize, {'dual-col': ifDualCol}]"
+        :class="[common.screenSize, { 'dual-col': ifDualCol }]"
         v-if="illust"
       >
         <div class="illust">
@@ -135,37 +133,73 @@ export default {
   }),
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')
-    this.getIllust()
+    this.loadIllust().catch(err => {
+      if (err.message === '404') this.router.replace('/404')
+      else mdui.snackbar('插画加载失败')
+    })
   },
   beforeDestroy () {
     $('body').removeClass('mdui-appbar-with-toolbar')
   },
   methods: {
-    getIllust () {
-      const id = this.$route.params.id
-      if (common.cachedIllusts[id]) {
-        this.illust = common.cachedIllusts[id]
+    loadIllust () {
+      return this.getIllust({
+        id: this.$route.params?.id,
+        pixivId: this.$route.query?.pixiv_id
+      }).then((illust) => {
+        this.illust = illust
+        common.cachedIllusts[illust.id] = illust
+        common.cachedUsers[illust.user.id] = illust.user
         this.loadLarge()
         this.$nextTick(() => {
           mdui.mutation()
+          this.setCaptionLink()
         })
-        return
-      }
-      $.ajax({
-        url: common.apiHost + '/illusts/' + id,
-        dataType: 'json',
-        timeout: 10000,
-        success: (illust) => {
-          this.illust = illust
-          common.cachedIllusts[id] = illust
-          common.cachedUsers[illust.user.id] = illust.user
-          this.loadLarge()
-          this.$nextTick(() => {
-            mdui.mutation()
+      })
+    },
+    getIllust ({ id, pixivId }) {
+      return new Promise((resolve, reject) => {
+        if (id) {
+          if (common.cachedIllusts[id]) {
+            resolve(common.cachedIllusts[id])
+          } else {
+            $.ajax({
+              url: common.apiHost + '/illusts/' + id,
+              dataType: 'json',
+              timeout: 10000,
+              success: (illust) => { resolve(illust) },
+              error: (jqXHR, textStatus, errorThrown) => {
+                if (jqXHR.status === 404) {
+                  reject(Error('404'))
+                } else {
+                  mdui.snackbar(`插画获取失败: ${textStatus}`)
+                  reject(errorThrown)
+                }
+              }
+            })
+          }
+        } else if (pixivId) {
+          $.ajax({
+            url: common.apiHost + '/illusts',
+            data: {
+              search: JSON.stringify({
+                query: { pixiv_id: pixivId }
+              })
+            },
+            timeout: 10000,
+            dataType: 'json',
+            success: ([illust]) => {
+              if (illust) resolve(illust)
+              else {
+                reject(Error('404'))
+              }
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+              reject(errorThrown)
+            }
           })
-        },
-        error: (jqXHR, textStatus, errorThrown) => {
-          mdui.snackbar(`插画获取失败: ${textStatus}`)
+        } else {
+          reject(Error('400'))
         }
       })
     },
@@ -181,6 +215,17 @@ export default {
         this.largeLoaded = true
       }
       img.src = common.getImageUrl(urls, 'large')
+    },
+    setCaptionLink () {
+      $('.illust-caption a').on('click', event => {
+        const matched = event.target.href.match(/^pixiv:\/\/illusts\/(\d+)$/)
+        if (matched) {
+          event.preventDefault()
+          this.$router.push(`/illusts/?pixiv_id=${matched[1]}`)
+          this.loadIllust().catch(window.open(`https://www.pixiv.net/artworks/${matched[1]}`, '_blank'))
+          this.$router.back()
+        }
+      })
     }
   },
   computed: {
@@ -224,9 +269,9 @@ export default {
 <style lang="scss" scoped>
 .container {
   position: relative;
-  margin: auto;
+  margin: 20px auto;
   &.xs {
-    margin-top: 0;
+    margin: 0;
   }
   &.sm {
     width: 85%;
@@ -243,7 +288,6 @@ export default {
 }
 .illust-container {
   display: flex;
-  margin-top: 20px;
   &.xs {
     margin-top: 0;
   }
@@ -253,6 +297,10 @@ export default {
     .illust {
       width: 100%;
     }
+  }
+  &:not(.xs) {
+    border-radius: 3px;
+    overflow: hidden;
   }
   &.dual-col {
     flex-direction: row;
@@ -307,14 +355,15 @@ export default {
     .illust-caption {
       margin: 14px 5px;
       word-break: break-word;
+      line-height: 1.5;
     }
     .illust-tags {
       margin: 10px 5px;
+      line-height: 1.5;
       .illust-tag {
         text-decoration: none;
         display: inline-block;
         margin-right: 8px;
-        margin-bottom: 5px;
       }
     }
     .illust-other-info {

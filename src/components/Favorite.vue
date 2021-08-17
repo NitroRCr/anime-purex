@@ -1,7 +1,14 @@
 <template>
-  <button class="favorite-btn mdui-btn-icon mdui-btn" @click="toggle()" :style="style"><i class="mdui-icon material-icons">{{ icon }}</i></button>
+  <button
+    class="favorite-btn mdui-btn-icon mdui-btn"
+    @click="toggle()"
+    :style="style"
+  >
+    <i class="mdui-icon material-icons">{{ icon }}</i>
+  </button>
 </template>
 <script>
+import mdui from 'mdui'
 export default {
   name: 'Favorite',
   props: {
@@ -31,13 +38,16 @@ export default {
         return
       }
       this.$root.getXuserData().then(() => {
-        const list = this.$root.defaultFavList.ids
+        const list = this.$root.defaultFavList
         if (this.favorited) {
-          list.splice(list.indexOf(this.illust.id), 1)
+          list.ids.splice(list.ids.indexOf(this.illust.id), 1)
         } else {
-          list.push(this.illust.id)
+          list.ids.push(this.illust.id)
+          mdui.snackbar(`已收藏到 "${list.name}"`, { timeout: 2000 })
         }
-        this.$root.putXuserData()
+        return this.$root.putXuserData()
+      }).catch(() => {
+        mdui.snackbar('同步失败')
       })
     }
   }

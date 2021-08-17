@@ -1,7 +1,7 @@
 module.exports = {
   productionSourceMap: false,
   pwa: {
-    themeColor: 'rgba(0, 0, 0, 0)',
+    themeColor: '#673AB7',
     iconPaths: {
       favicon32: 'img/icons/px-maskable-75x75.png',
       favicon16: 'img/icons/px-maskable-75x75.png',

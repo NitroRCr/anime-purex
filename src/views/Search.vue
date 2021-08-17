@@ -10,7 +10,7 @@
         <more-vert></more-vert>
       </div>
       <div class="mdui-tab mdui-color-theme" mdui-tab>
-        <a href="#illust-search" class="mdui-ripple mdui-ripple-white">插图</a>
+        <a href="#illust-search" class="mdui-ripple mdui-ripple-white">作品</a>
         <a href="#user-search" class="mdui-ripple mdui-ripple-white"
           >画师</a
         >

@@ -29,7 +29,6 @@ export default {
       }
       image.src = this.imageAPI
     },
-    randint: (obj) => obj[Object.keys(obj)[Math.floor(Math.random() * Object.keys(obj).length)]],
     getImage () {
       const direction = innerHeight > innerWidth ? 'portrait' : 'landscape'
       const webp = common.webpSupported ? 'true' : 'false'

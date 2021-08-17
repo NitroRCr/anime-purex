@@ -19,7 +19,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/illusts/:id',
+    path: '/illusts/:id?',
     name: 'Illust',
     component: Illust
   },

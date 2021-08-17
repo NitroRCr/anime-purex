@@ -5,7 +5,7 @@
         <input
           class="mdui-textfield-input"
           type="text"
-          placeholder="搜索插图"
+          placeholder="搜索作品"
           v-model="searchText"
         />
       </div>

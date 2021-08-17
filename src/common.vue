@@ -96,12 +96,22 @@ const ajax = function (params) {
     }
   }
 }
-const webpSupported = (function () {
+let webpSupported = (function () {
   try {
     return document.createElement('canvas').toDataURL('image/webp', 0.5).indexOf('data:image/webp') === 0
   } catch (err) {
     return false
   }
+})();
+(function () {
+  var img = new Image()
+  function getResult (event) {
+    webpSupported = event && event.type === 'load' ? img.width === 1 : false
+    common.webpSupported = webpSupported
+  }
+  img.onerror = getResult
+  img.onload = getResult
+  img.src = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=' // 一像素图片
 })()
 const cachedIllusts = {}
 const cachedUsers = {}
