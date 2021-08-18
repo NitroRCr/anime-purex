@@ -137,12 +137,10 @@ export default {
   }),
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')
-    window.addEventListener('scroll', this.scrollToTop)
     this.loadIllust()
   },
   beforeDestroy () {
     $('body').removeClass('mdui-appbar-with-toolbar')
-    window.removeEventListener('scroll', this.scrollToTop)
   },
   methods: {
     loadIllust () {
@@ -237,21 +235,6 @@ export default {
           this.$router.push(`/illusts/?pixiv_id=${matched[1]}`)
         }
       })
-    },
-    backTop () {
-      const that = this
-      const timer = setInterval(() => {
-        const ispeed = Math.floor(-that.scrollTop / 5)
-        document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop + ispeed
-        if (that.scrollTop === 0) {
-          clearInterval(timer)
-        }
-      }, 16)
-    },
-    scrollToTop () {
-      const that = this
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      that.scrollTop = scrollTop
     }
   },
   computed: {
@@ -295,7 +278,6 @@ export default {
       const id = to.params.id || to.query.pixiv_id
       if (id && id !== this.lastId) {
         this.loadIllust()
-        this.backTop()
         this.lastId = id
       }
     }
