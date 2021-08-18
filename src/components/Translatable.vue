@@ -93,7 +93,9 @@ export default {
       if (!this.translated) {
         this.translate()
       }
-    }
+    },
+    text () { this.translated = false },
+    html () { this.translated = false }
   }
 }
 </script>

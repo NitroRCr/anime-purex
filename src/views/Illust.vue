@@ -96,6 +96,7 @@
             >
           </div>
           <user-brief :user="illust.user"></user-brief>
+          <user-image-list :userId="illust.user.id" @click="loadIllust"></user-image-list>
         </div>
       </div>
     </div>
@@ -109,6 +110,7 @@ import MoreVert from '../components/MoreVert.vue'
 import UserBrief from '../components/UserBrief.vue'
 import OriginUrl from '../components/OriginUrl.vue'
 import Translatable from '../components/Translatable.vue'
+import UserImageList from '../components/UserImageList.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
 const $ = mdui.$
@@ -121,7 +123,8 @@ export default {
     MoreVert,
     UserBrief,
     OriginUrl,
-    Translatable
+    Translatable,
+    UserImageList
   },
   data: () => ({
     illust: null,
@@ -129,17 +132,17 @@ export default {
     common,
     currp: 0,
     inputScale: 0,
-    enableTranslate: false
+    enableTranslate: false,
+    lastId: null
   }),
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')
-    this.loadIllust().catch(err => {
-      if (err.message === '404') this.router.replace('/404')
-      else mdui.snackbar('插画加载失败')
-    })
+    window.addEventListener('scroll', this.scrollToTop)
+    this.loadIllust()
   },
   beforeDestroy () {
     $('body').removeClass('mdui-appbar-with-toolbar')
+    window.removeEventListener('scroll', this.scrollToTop)
   },
   methods: {
     loadIllust () {
@@ -150,11 +153,21 @@ export default {
         this.illust = illust
         common.cachedIllusts[illust.id] = illust
         common.cachedUsers[illust.user.id] = illust.user
-        this.loadLarge()
+        this.changeImage(0)
         this.$nextTick(() => {
           mdui.mutation()
           this.setCaptionLink()
         })
+      }).catch(err => {
+        if (err.message === '404') {
+          const pixivId = this.$route.params.pixiv_id
+          if (pixivId) window.open(`https://www.pixiv.net/artworks/${pixivId}`, '_blank')
+          else this.$router.replace('/404')
+        } else if (err.message === '400') {
+          this.$router.replace('/404')
+        } else {
+          console.log(err)
+        }
       })
     },
     getIllust ({ id, pixivId }) {
@@ -222,10 +235,23 @@ export default {
         if (matched) {
           event.preventDefault()
           this.$router.push(`/illusts/?pixiv_id=${matched[1]}`)
-          this.loadIllust().catch(window.open(`https://www.pixiv.net/artworks/${matched[1]}`, '_blank'))
-          this.$router.back()
         }
       })
+    },
+    backTop () {
+      const that = this
+      const timer = setInterval(() => {
+        const ispeed = Math.floor(-that.scrollTop / 5)
+        document.documentElement.scrollTop = document.body.scrollTop = that.scrollTop + ispeed
+        if (that.scrollTop === 0) {
+          clearInterval(timer)
+        }
+      }, 16)
+    },
+    scrollToTop () {
+      const that = this
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      that.scrollTop = scrollTop
     }
   },
   computed: {
@@ -261,6 +287,16 @@ export default {
           else return true
         default:
           return true
+      }
+    }
+  },
+  watch: {
+    $route (to, from) {
+      const id = to.params.id || to.query.pixiv_id
+      if (id && id !== this.lastId) {
+        this.loadIllust()
+        this.backTop()
+        this.lastId = id
       }
     }
   }
