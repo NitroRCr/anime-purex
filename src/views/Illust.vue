@@ -2,12 +2,7 @@
   <div id="illust-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a
-          href="javascript:;"
-          @click="$emit('back')"
-          class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></a
-        >
+        <back-btn @click="$emit('back')" @longtouch="$router.push('/')"></back-btn>
         <span class="mdui-typo-title">{{ illust ? illust.title : "" }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
@@ -111,6 +106,7 @@ import UserBrief from '../components/UserBrief.vue'
 import OriginUrl from '../components/OriginUrl.vue'
 import Translatable from '../components/Translatable.vue'
 import UserImageList from '../components/UserImageList.vue'
+import BackBtn from '../components/BackBtn.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
 const $ = mdui.$
@@ -124,7 +120,8 @@ export default {
     UserBrief,
     OriginUrl,
     Translatable,
-    UserImageList
+    UserImageList,
+    BackBtn
   },
   data: () => ({
     illust: null,

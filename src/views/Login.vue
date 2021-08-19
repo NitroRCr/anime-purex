@@ -74,7 +74,7 @@
                 mdui-color-theme-accent
                 mdui-ripple
               "
-              :class="{ disabled: waiting }"
+              :disabled="waiting"
             >
               {{ mode === "login" ? "登录" : "注册" }}
             </button>

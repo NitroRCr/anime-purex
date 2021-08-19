@@ -30,11 +30,7 @@
           <div class="type-select">
             <div class="panel-sub-title">类型</div>
             <div class="select-container">
-              <select
-                class="mdui-select"
-                mdui-select
-                v-model="type"
-              >
+              <select class="mdui-select" mdui-select v-model="type">
                 <option :value="null">不限</option>
                 <option value="illust">插画</option>
                 <option value="manga">漫画</option>
@@ -116,7 +112,9 @@
             backgroundImage: `url(${getMediumImage(illust)})`,
           }"
         >
-          <div class="image-num" v-if="illust.image_urls.length > 1">{{ illust.image_urls.length }}</div>
+          <div class="image-num" v-if="illust.image_urls.length > 1">
+            {{ illust.image_urls.length }}
+          </div>
           <favorite :illust="illust"></favorite>
         </div>
         <div class="illust-info">
@@ -196,17 +194,24 @@ export default {
         return
       }
       this.waiting = true
-      const search = JSON.stringify(this.ids
-        ? {
-          ids: this.ids.slice().reverse(),
-          limit: this.limit,
-          offset: this.offset
-        } : {
-          limit: this.limit,
-          offset: this.offset,
-          sort: this.sort,
-          query: this.query
-        })
+      const search = JSON.stringify(
+        this.ids
+          ? {
+            ids: this.ids
+              .slice()
+              .reverse()
+              .slice(
+                this.offset,
+                Math.min(this.ids.length, this.offset + this.limit)
+              )
+          }
+          : {
+            limit: this.limit,
+            offset: this.offset,
+            sort: this.sort,
+            query: this.query
+          }
+      )
       $.ajax({
         url: common.apiHost + '/illusts',
         data: {
@@ -259,7 +264,7 @@ export default {
     getMediumImage (illust) {
       const src = common.getImageUrl(illust.image_urls[0], 'medium')
       const img = new Image()
-      img.onload = event => {
+      img.onload = (event) => {
         illust.aspectRadio = event.target.width / event.target.height
       }
       img.src = src
@@ -363,7 +368,7 @@ export default {
         top: 5px;
         right: 5px;
         border-radius: 10px;
-        background-color: rgba(#000, .25);
+        background-color: rgba(#000, 0.25);
         padding: 3px 5px;
         color: white;
         font-weight: bold;
