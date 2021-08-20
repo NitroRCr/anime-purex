@@ -147,6 +147,15 @@ const getImageUrl = (urls, quality) => {
   }
   return apiHost + url
 }
+const getMediumImage = illust => {
+  const src = getImageUrl(illust.image_urls[0], 'medium')
+  const img = new Image()
+  img.onload = (event) => {
+    illust.aspectRadio = event.target.width / event.target.height
+  }
+  img.src = src
+  return src
+}
 const getScreenSize = () => {
   if (innerWidth <= 600) return 'xs'
   if (innerWidth <= 1024) return 'sm'
@@ -183,6 +192,7 @@ const common = {
   cachedIllusts,
   cachedUsers,
   getImageUrl,
+  getMediumImage,
   screenSize: getScreenSize(),
   copyText,
   evaluators

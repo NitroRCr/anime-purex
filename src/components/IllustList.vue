@@ -109,7 +109,7 @@
           @click.self="$router.push(`/illusts/${illust.id}`)"
           class="image mdui-hoverable"
           :style="{
-            backgroundImage: `url(${getMediumImage(illust)})`,
+            backgroundImage: `url(${common.getMediumImage(illust)})`,
           }"
         >
           <div class="image-num" v-if="illust.image_urls.length > 1">
@@ -260,15 +260,6 @@ export default {
       this.waiting = false
       this.noMore = false
       this.getIllusts()
-    },
-    getMediumImage (illust) {
-      const src = common.getImageUrl(illust.image_urls[0], 'medium')
-      const img = new Image()
-      img.onload = (event) => {
-        illust.aspectRadio = event.target.width / event.target.height
-      }
-      img.src = src
-      return src
     }
   },
   computed: {

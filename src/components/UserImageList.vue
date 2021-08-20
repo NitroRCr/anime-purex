@@ -36,6 +36,7 @@ export default {
         for (const illust of illusts) {
           common.cachedIllusts[illust.id] = illust
           common.cachedUsers[illust.user.id] = illust.user
+          common.getMediumImage(illust)
         }
       }).catch(err => {
         console.log(err)
