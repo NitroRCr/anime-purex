@@ -179,6 +179,10 @@ const evaluators = [
     name: 'quality_v1',
     showName: '高质量v1',
     icon: 'high_quality'
+  },
+  {
+    name: 'cute_v1',
+    showName: '可爱'
   }
 ]
 const common = {

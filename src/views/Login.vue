@@ -3,12 +3,10 @@
     <page-background></page-background>
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a
-          href="javascript:;"
+        <back-btn
           @click="$emit('back')"
-          class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></a
-        >
+          @longpress="$emit('backhome')"
+        ></back-btn>
         <span class="mdui-typo-title">{{
           mode === "login" ? "登录" : "注册"
         }}</span>
@@ -92,6 +90,7 @@
 <script>
 import MoreVert from '../components/MoreVert.vue'
 import PageBackground from '../components/PageBackground.vue'
+import BackBtn from '../components/BackBtn.vue'
 import mdui from 'mdui'
 import common from '../common.vue'
 import sha256 from 'crypto-js/sha256'
@@ -100,7 +99,8 @@ export default {
   name: 'Login',
   components: {
     MoreVert,
-    PageBackground
+    PageBackground,
+    BackBtn
   },
   data: () => ({
     mode: 'login',

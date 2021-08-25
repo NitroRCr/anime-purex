@@ -22,7 +22,7 @@ export default {
     touchstart () {
       this.timeOutEvent = setTimeout(() => {
         this.timeOutEvent = 0
-        this.$emit('longtouch')
+        this.$emit('longpress')
       }, 500)
     },
     touchmove () {

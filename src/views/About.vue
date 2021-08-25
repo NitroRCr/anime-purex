@@ -3,12 +3,10 @@
     <page-background :mask="true"></page-background>
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a
-          href="javascript:;"
+        <back-btn
           @click="$emit('back')"
-          class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></a
-        >
+          @longpress="$emit('backhome')"
+        ></back-btn>
         <span class="mdui-typo-title">关于</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
@@ -42,13 +40,15 @@
 <script>
 import MoreVert from '../components/MoreVert.vue'
 import PageBackground from '../components/PageBackground.vue'
+import BackBtn from '../components/BackBtn.vue'
 import mdui from 'mdui'
 const $ = mdui.$
 export default {
   name: 'About',
   components: {
     MoreVert,
-    PageBackground
+    PageBackground,
+    BackBtn
   },
   mounted () {
     $('body').addClass('mdui-appbar-with-toolbar')

@@ -2,12 +2,10 @@
   <div id="not-found">
     <div class="mdui-appbar">
       <div class="mdui-toolbar mdui-color-theme">
-        <a
-          href="javascript:;"
+        <back-btn
           @click="$emit('back')"
-          class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></a
-        >
+          @longpress="$emit('backhome')"
+        ></back-btn>
         <span class="mdui-typo-title">NotFound</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
@@ -25,10 +23,12 @@
 </template>
 <script>
 import MoreVert from '../components/MoreVert.vue'
+import BackBtn from '../components/BackBtn.vue'
 export default {
   name: 'NotFound',
   components: {
-    MoreVert
+    MoreVert,
+    BackBtn
   }
 }
 </script>

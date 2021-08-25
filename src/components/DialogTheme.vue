@@ -13,7 +13,7 @@
               v-model="inputColors.layout"
             />
             <i class="mdui-radio-icon"></i>
-            Auto
+            自动
           </label>
         </div>
         <div class="mdui-col">
@@ -25,7 +25,7 @@
               v-model="inputColors.layout"
             />
             <i class="mdui-radio-icon"></i>
-            Light
+            亮色
           </label>
         </div>
         <div class="mdui-col">
@@ -37,7 +37,7 @@
               v-model="inputColors.layout"
             />
             <i class="mdui-radio-icon"></i>
-            Dark
+            暗色
           </label>
         </div>
       </div>
@@ -483,7 +483,7 @@
         mdui-dialog-confirm=""
         @click="apply"
       >
-        ok
+        应用
       </button>
     </div>
   </div>

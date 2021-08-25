@@ -2,9 +2,10 @@
   <div id="tag-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a href="javascript:;" @click="$emit('back')" class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></a
-        >
+        <back-btn
+          @click="$emit('back')"
+          @longpress="$emit('backhome')"
+        ></back-btn>
         <span class="mdui-typo-title">#{{ tag }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <collect ref="collect" :tag="tag"></collect>
@@ -23,6 +24,7 @@
 import IllustList from '../components/IllustList.vue'
 import MoreVert from '../components/MoreVert.vue'
 import Collect from '../components/Collect.vue'
+import BackBtn from '../components/BackBtn.vue'
 import mdui from 'mdui'
 const $ = mdui.$
 export default {
@@ -40,7 +42,8 @@ export default {
   components: {
     IllustList,
     MoreVert,
-    Collect
+    Collect,
+    BackBtn
   }
 }
 </script>

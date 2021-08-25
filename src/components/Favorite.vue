@@ -43,7 +43,7 @@ export default {
           list.ids.splice(list.ids.indexOf(this.illust.id), 1)
         } else {
           list.ids.push(this.illust.id)
-          mdui.snackbar(`已收藏到 "${list.name}"`, { timeout: 2000 })
+          this.$root.settings.favoriteToast && mdui.snackbar(`已收藏到 "${list.name}"`, { timeout: 2000 })
         }
         return this.$root.putXuserData()
       }).catch(() => {

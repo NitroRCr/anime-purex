@@ -2,12 +2,10 @@
   <div id="favorited-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <a
-          href="javascript:;"
+        <back-btn
           @click="$emit('back')"
-          class="mdui-btn mdui-btn-icon"
-          ><i class="mdui-icon material-icons">arrow_back</i></a
-        >
+          @longpress="$emit('backhome')"
+        ></back-btn>
         <span class="mdui-typo-title">收藏/关注</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
@@ -145,6 +143,7 @@
 import IllustList from '../components/IllustList.vue'
 import MoreVert from '../components/MoreVert.vue'
 import UserList from '../components/UserList.vue'
+import BackBtn from '../components/BackBtn.vue'
 import mdui from 'mdui'
 import common from '../common.vue'
 const $ = mdui.$
@@ -153,7 +152,8 @@ export default {
   components: {
     IllustList,
     MoreVert,
-    UserList
+    UserList,
+    BackBtn
   },
   data: () => ({
     common,

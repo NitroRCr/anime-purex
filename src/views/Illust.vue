@@ -2,7 +2,10 @@
   <div id="illust-view">
     <div class="mdui-appbar mdui-appbar-fixed">
       <div class="mdui-toolbar mdui-color-theme">
-        <back-btn @click="$emit('back')" @longtouch="$router.push('/')"></back-btn>
+        <back-btn
+          @click="$emit('back')"
+          @longpress="$emit('backhome')"
+        ></back-btn>
         <span class="mdui-typo-title">{{ illust ? illust.title : "" }}</span>
         <div class="mdui-toolbar-spacer"></div>
         <router-link to="/search" class="mdui-btn mdui-btn-icon"
@@ -19,7 +22,17 @@
       >
         <div class="illust">
           <div class="large-image">
-            <img :src="currImage" :style="imgScaleStyle" class="large-img" />
+            <img
+              :src="currImage"
+              :style="imgScaleStyle"
+              v-show="!$root.settings.anime4k || !largeLoaded"
+              class="large-img"
+            />
+            <canvas
+              :style="imgScaleStyle"
+              v-show="$root.settings.anime4k && largeLoaded"
+              class="image-scaler"
+            ></canvas>
           </div>
         </div>
         <div class="illust-info">
@@ -91,7 +104,10 @@
             >
           </div>
           <user-brief :user="illust.user"></user-brief>
-          <user-image-list :userId="illust.user.id" @click="loadIllust"></user-image-list>
+          <user-image-list
+            :userId="illust.user.id"
+            @click="loadIllust"
+          ></user-image-list>
         </div>
       </div>
     </div>
@@ -109,6 +125,7 @@ import UserImageList from '../components/UserImageList.vue'
 import BackBtn from '../components/BackBtn.vue'
 import mdui from 'mdui'
 import common from '@/common.vue'
+import Anime4K from 'anime4k'
 const $ = mdui.$
 export default {
   name: 'Illust',
@@ -155,7 +172,7 @@ export default {
         })
       }).catch(err => {
         if (err.message === '404') {
-          const pixivId = this.$route.params.pixiv_id
+          const pixivId = this.$route.query.pixiv_id
           if (pixivId) window.open(`https://www.pixiv.net/artworks/${pixivId}`, '_blank')
           else this.$router.replace('/404')
         } else if (err.message === '400') {
@@ -218,20 +235,30 @@ export default {
     },
     loadLarge () {
       const img = new Image()
+      img.crossOrigin = ''
       const urls = this.illust.image_urls[this.currp]
       img.onload = () => {
-        this.largeLoaded = true
+        if (this.$root.settings.anime4k) {
+          setTimeout(() => {
+            const scaler = Anime4K.Scaler($('canvas.image-scaler')[0].getContext('webgl'))
+            scaler.inputImage(img)
+            scaler.resize(2.0, {})
+            this.largeLoaded = true
+          }, 250)
+        }
       }
       img.src = common.getImageUrl(urls, 'large')
     },
     setCaptionLink () {
-      $('.illust-caption a').on('click', event => {
+      $('.illust-caption a[href^="pixiv"]').on('click', event => {
         const matched = event.target.href.match(/^pixiv:\/\/illusts\/(\d+)$/)
         if (matched) {
           event.preventDefault()
           this.$router.push(`/illusts/?pixiv_id=${matched[1]}`)
         }
       })
+    },
+    upscale (event) {
     }
   },
   computed: {
@@ -331,7 +358,8 @@ export default {
   .illust {
     .large-image {
       overflow: auto;
-      img {
+      img,
+      canvas {
         width: 100%;
         display: block;
         transform-origin: top left;

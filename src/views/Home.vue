@@ -10,18 +10,18 @@
         <more-vert></more-vert>
       </div>
       <div class="mdui-tab mdui-color-theme" mdui-tab>
-        <a href="#illusts-illust" class="mdui-ripple mdui-ripple-white">插画</a>
-        <a href="#illusts-manga" class="mdui-ripple mdui-ripple-white">漫画</a>
+        <a href="#illusts-illust" @click="focusTab(0)" class="mdui-ripple mdui-ripple-white">插画</a>
+        <a href="#illusts-manga" @click="focusTab(1)" class="mdui-ripple mdui-ripple-white">漫画</a>
       </div>
     </div>
-    <div id="illusts-illust">
+    <div v-show="focusedTab === 0">
       <div class="mdui-container">
-        <illust-list :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']" originType="illust"></illust-list>
+        <illust-list ref="illusts" :originSort="common.IllustSort.RANDOM" :originEvals="['quality_v1']" originType="illust"></illust-list>
       </div>
     </div>
-    <div id="illusts-manga">
+    <div v-show="focusedTab === 1">
       <div class="mdui-container">
-        <illust-list :originSort="common.IllustSort.RANDOM" originType="manga"></illust-list>
+        <illust-list ref="mangas" :originSort="common.IllustSort.RANDOM" originType="manga"></illust-list>
       </div>
     </div>
   </div>
@@ -41,7 +41,8 @@ export default {
     MoreVert
   },
   data: () => ({
-    common
+    common,
+    focusedTab: 0
   }),
   activated () {
     $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
@@ -50,6 +51,18 @@ export default {
   },
   deactivated () {
     $('body').removeClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
+  },
+  methods: {
+    focusTab (index) {
+      if (index === this.focusedTab) {
+        document.body.scrollIntoView({ behavior: 'smooth' })
+        if (index === 0) this.$refs.illusts.refresh()
+        else if (index === 1) this.$refs.mangas.refresh()
+      } else {
+        document.body.scrollIntoView()
+        this.focusedTab = index
+      }
+    }
   }
 }
 </script>

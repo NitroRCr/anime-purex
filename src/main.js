@@ -15,7 +15,12 @@ new Vue({
   data: () => ({
     xuser: localStorage.xuser ? JSON.parse(localStorage.xuser) : null,
     favorited: null,
-    following: null
+    following: null,
+    settings: localStorage.settings ? JSON.parse(localStorage.settings) : {
+      longPressToHome: true,
+      favoriteToast: true,
+      anime4k: true
+    }
   }),
   mounted () {
     if (this.xuser) this.getXuserData()
@@ -146,6 +151,14 @@ new Vue({
     defaultFavList () {
       if (!this.favorited) return null
       return this.favorited.find(item => item.default)
+    }
+  },
+  watch: {
+    settings: {
+      handler () {
+        localStorage.settings = JSON.stringify(this.settings)
+      },
+      deep: true
     }
   }
 }).$mount('#app')

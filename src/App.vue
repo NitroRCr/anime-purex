@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <keep-alive :include="['Home', 'Search', 'Tag', 'User', 'Favorited']">
-      <router-view @back="backPage" />
+      <router-view
+        @back="backPage"
+        @backhome="$root.settings.longPressToHome && $router.push('/')"
+      />
     </keep-alive>
     <dialog-theme></dialog-theme>
   </div>

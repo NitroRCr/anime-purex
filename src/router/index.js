@@ -8,6 +8,7 @@ import Tag from '../views/Tag.vue'
 import User from '../views/User.vue'
 import About from '../views/About.vue'
 import Login from '../views/Login.vue'
+import Settings from '../views/Settings.vue'
 import NotFound from '../views/NotFound.vue'
 
 Vue.use(VueRouter)
@@ -52,6 +53,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   },
   {
     name: '404',
