@@ -95,6 +95,15 @@
               </li>
             </ul>
           </div>
+          <div class="likes-range">
+            <div class="panel-sub-title">收藏数限制</div>
+            <div class="panel-range-container">
+              <label class="mdui-slider">
+                <input v-model="likesRange" type="range" step="0.05" min="0" max="1" />
+              </label>
+              <div class="min-likes">{{ minLikes ? '≥' + minLikes : '不限' }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -185,7 +194,8 @@ export default {
       ageLimit: this.originAgeLimit,
       evaluators: this.originEvals,
       type: this.originType,
-      limit: 20
+      limit: 20,
+      likesRange: 0
     }
   },
   methods: {
@@ -311,7 +321,15 @@ export default {
       if (this.user != null) {
         query.user = this.user
       }
+      if (this.likesRange) {
+        query.min_likes = this.minLikes
+      }
       return query
+    },
+    minLikes () {
+      const range = parseFloat(this.likesRange)
+      if (!range) return 0
+      return Math.round(50 ** range * 4) * 100
     }
   },
   watch: {
@@ -330,6 +348,15 @@ export default {
   }
   .select-container {
     padding: 10px 16px;
+  }
+  .panel-range-container {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    .min-likes {
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
   }
   .panel-title {
     margin-left: 10px;

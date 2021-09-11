@@ -245,6 +245,8 @@ export default {
             scaler.resize(2.0, {})
             this.largeLoaded = true
           }, 250)
+        } else {
+          this.largeLoaded = true
         }
       }
       img.src = common.getImageUrl(urls, 'large')

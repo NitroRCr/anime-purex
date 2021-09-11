@@ -12,16 +12,18 @@ const $ = mdui.$
 new Vue({
   router,
   render: h => h(App),
-  data: () => ({
-    xuser: localStorage.xuser ? JSON.parse(localStorage.xuser) : null,
-    favorited: null,
-    following: null,
-    settings: localStorage.settings ? JSON.parse(localStorage.settings) : {
-      longPressToHome: true,
-      favoriteToast: true,
-      anime4k: true
+  data: () => {
+    const settings = localStorage.settings ? JSON.parse(localStorage.settings) : {}
+    settings.anime4k ??= false
+    settings.favoriteToast ??= true
+    settings.longPressToHome ??= true
+    return {
+      xuser: localStorage.xuser ? JSON.parse(localStorage.xuser) : null,
+      favorited: null,
+      following: null,
+      settings
     }
-  }),
+  },
   mounted () {
     if (this.xuser) this.getXuserData()
   },
