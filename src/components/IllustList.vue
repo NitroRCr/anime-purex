@@ -212,7 +212,7 @@ export default {
               .reverse()
               .slice(
                 this.offset,
-                Math.min(this.ids.length, this.offset + this.limit)
+                this.offset + this.limit
               )
           }
           : {

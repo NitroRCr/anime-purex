@@ -41,11 +41,14 @@ export default {
         return
       }
       const search = JSON.stringify(this.ids ? {
-        limit: 20,
+        limit: this.limit,
         offset: 0,
-        ids: this.ids.reverse()
+        ids: this.ids
+          .slice()
+          .reverse()
+          .slice(this.offset, this.offset + this.limit)
       } : {
-        limit: 20,
+        limit: this.limit,
         offset: 0,
         query: {
           text: this.text
@@ -82,6 +85,7 @@ export default {
           }, 3000)
         }
       })
+      this.waiting = true
     }
   },
   watch: {
