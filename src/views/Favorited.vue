@@ -238,6 +238,7 @@ export default {
       this.listNewName = ''
       if (this.$root.favorited.find(list => list.name === newName)) {
         mdui.snackbar('重命名失败：名称冲突')
+        return
       }
       this.$root.getXuserData().then(() => {
         const favorited = this.$root.favorited

@@ -19,7 +19,7 @@
       </ul>
     </div>
     <div class="mdui-dialog-actions">
-      <button class="mdui-btn mdui-ripple">取消</button>
+      <button class="mdui-btn mdui-ripple" mdui-dialog-cancel>取消</button>
     </div>
   </div>
 </template>
