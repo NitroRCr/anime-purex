@@ -1,6 +1,6 @@
 <template>
   <div class="illust-list-container">
-    <div class="mdui-panel" v-if="!ids" mdui-panel>
+    <div class="mdui-panel" v-if="!favList" mdui-panel>
       <div class="mdui-panel-item">
         <div class="mdui-panel-item-header">
           <div class="mdui-panel-item-title">
@@ -124,7 +124,7 @@
           <div class="image-num" v-if="illust.image_urls.length > 1">
             {{ illust.image_urls.length }}
           </div>
-          <favorite :illust="illust"></favorite>
+          <favorite :illust="illust" :originFavList="favList"></favorite>
         </div>
         <div class="illust-info">
           <div class="illust-title">{{ illust.title }}</div>
@@ -165,7 +165,7 @@ export default {
     originAgeLimit: { default: common.AgeLimit.ALL_AGE },
     originType: { default: null },
     user: { default: null },
-    ids: { default: null }
+    favList: { default: null }
   },
   components: {
     IllustLoader,
@@ -205,9 +205,9 @@ export default {
       }
       this.waiting = true
       const search = JSON.stringify(
-        this.ids
+        this.favList
           ? {
-            ids: this.ids
+            ids: this.favList.ids
               .slice()
               .reverse()
               .slice(

@@ -34,37 +34,67 @@
             <div class="mdui-panel-item-body">
               <ul class="mdui-list">
                 <li
-                  class="mdui-list-item mdui-ripple"
-                  v-for="list of $root.favorited"
-                  :key="list.name"
-                  :class="{ 'mdui-list-item-active': list.default }"
+                  class="mdui-list-item"
+                  v-for="(list, index) in $root.favorited"
+                  :key="index"
+                  :class="{ 'mdui-list-item-active': list.name === currList.name }"
                 >
                   <i class="mdui-list-item-icon mdui-icon material-icons"
                     >list</i
                   >
                   <div
                     class="mdui-list-item-content"
-                    @click.self="chList(list.name)"
+                    @click.self="selectedList = list"
                   >
-                    {{ list.name + (list.default ? "(当前)" : "") }}
+                    {{ list.name }}
+                  </div>
+                  <div class="mdui-chip" v-if="list.default">
+                    <strong class="mdui-chip-title">默认</strong>
                   </div>
                   <button
                     class="
                       mdui-btn mdui-btn-icon mdui-text-color-theme-secondary
                     "
-                    mdui-dialog="{ target: '#dialog-rename-list' }"
-                    @click="listNewName = listOriginName = list.name"
+                    :mdui-menu="stringify({ target: `#list-menu-${index}` })"
                   >
-                    <i class="mdui-icon material-icons">edit</i>
+                    <i class="mdui-icon material-icons">more_vert</i>
                   </button>
-                  <button
-                    class="
-                      mdui-btn mdui-btn-icon mdui-text-color-theme-secondary
-                    "
-                    @click="delList(list.name)"
-                  >
-                    <i class="mdui-icon material-icons">delete_forever</i>
-                  </button>
+                  <ul :id="`list-menu-${index}`" :key="index" class="mdui-menu">
+                    <li class="mdui-menu-item">
+                      <a
+                        href="javascript:;"
+                        class="mdui-ripple"
+                        @click="chDefaultList(list.name)"
+                      >
+                        <i class="mdui-menu-item-icon mdui-icon material-icons"
+                          >favorite_border</i
+                        >设为默认
+                      </a>
+                    </li>
+                    <li class="mdui-menu-item">
+                      <a
+                        href="javascript:;"
+                        class="mdui-ripple"
+                        mdui-dialog="{ target: '#dialog-rename-list' }"
+                        @click="listNewName = listOriginName = list.name"
+                      >
+                        <i class="mdui-menu-item-icon mdui-icon material-icons"
+                          >edit</i
+                        >重命名
+                      </a>
+                    </li>
+                    <li class="mdui-menu-item">
+                      <a
+                        href="javascript:;"
+                        class="mdui-ripple"
+                        @click="delList(list.name)"
+                      >
+                        <i class="mdui-menu-item-icon mdui-icon material-icons"
+                          >delete_forever</i
+                        >删除
+                      </a>
+                    </li>
+                  </ul>
                 </li>
                 <li
                   class="mdui-list-item mdui-ripple"
@@ -81,8 +111,8 @@
         </div>
         <illust-list
           ref="illustList"
-          v-if="favList"
-          :ids="favList.ids"
+          v-if="currList"
+          :favList="currList"
         ></illust-list>
       </div>
     </div>
@@ -155,19 +185,20 @@ export default {
     UserList,
     BackBtn
   },
-  data: () => ({
-    common,
-    favorited: null,
-    following: null,
-    newListName: '',
-    listNewName: '',
-    listOriginName: ''
-  }),
+  data: function () {
+    return {
+      common,
+      newListName: '',
+      listNewName: '',
+      listOriginName: '',
+      selectedList: null
+    }
+  },
   computed: {
-    favList () { return this.$root.defaultFavList }
+    currList () { return this.selectedList ?? this.$root.defaultFavList }
   },
   watch: {
-    favList (newList, oldList) {
+    currList (newList, oldList) {
       if (oldList && newList && oldList.name !== newList.name) {
         this.$nextTick(() => {
           this.$refs.illustList.refresh()
@@ -176,6 +207,7 @@ export default {
     }
   },
   methods: {
+    stringify: (json) => JSON.stringify(json),
     getFavorite () {
       const session = JSON.parse(localStorage.session)
       $.ajax({
@@ -186,6 +218,9 @@ export default {
     initList () {
       const name = this.newListName
       this.newListName = ''
+      if (this.$root.favorited.find(list => list.name === name)) {
+        mdui.snackbar('新建失败：名称冲突')
+      }
       this.$root.getXuserData().then(() => {
         this.$root.favorited.push({
           name,
@@ -201,6 +236,9 @@ export default {
     renameList () {
       const newName = this.listNewName
       this.listNewName = ''
+      if (this.$root.favorited.find(list => list.name === newName)) {
+        mdui.snackbar('重命名失败：名称冲突')
+      }
       this.$root.getXuserData().then(() => {
         const favorited = this.$root.favorited
         const list = favorited.find(list => list.name === this.listOriginName)
@@ -241,7 +279,7 @@ export default {
         console.log(err)
       })
     },
-    chList (name) {
+    chDefaultList (name) {
       this.$root.getXuserData().then(() => {
         const favorited = this.$root.favorited
         const list = favorited.find(list => list.name === name)
@@ -261,6 +299,10 @@ export default {
   activated () {
     $('body').addClass('mdui-appbar-with-tab mdui-appbar-with-toolbar')
     this.$root.getXuserData().catch(() => {})
+    if (this.$route.query.refresh) {
+      this.$router.replace({ query: {} })
+      this.$refs.illustList.refresh()
+    }
     mdui.mutation()
   },
   deactivated () {

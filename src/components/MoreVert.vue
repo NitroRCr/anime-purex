@@ -16,7 +16,7 @@
       </li>
       <div class="mdui-divider"></div>
       <li class="mdui-menu-item" v-if="$root.xuser">
-        <router-link to="/favorited" class="mdui-ripple"
+        <router-link :to="{ path: '/favorited', query: { refresh: true } }" class="mdui-ripple"
           ><i class="mdui-menu-item-icon mdui-icon material-icons"
             >favorite_border</i
           >已收藏/关注</router-link

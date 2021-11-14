@@ -6,15 +6,20 @@
         @backhome="$root.settings.longPressToHome && $router.push('/')"
       />
     </keep-alive>
-    <dialog-theme></dialog-theme>
+    <div class="dialogs">
+      <dialog-theme></dialog-theme>
+      <list-select></list-select>
+    </div>
   </div>
 </template>
 <script>
 import DialogTheme from './components/DialogTheme.vue'
+import ListSelect from './components/ListSelect.vue'
 export default {
   name: 'App',
   components: {
-    DialogTheme
+    DialogTheme,
+    ListSelect
   },
   methods: {
     backPage () {

@@ -21,13 +21,32 @@ new Vue({
       xuser: localStorage.xuser ? JSON.parse(localStorage.xuser) : null,
       favorited: null,
       following: null,
-      settings
+      settings,
+      selectedList: null,
+      dialogSelect: null
     }
   },
   mounted () {
     if (this.xuser) this.getXuserData()
   },
   methods: {
+    selectList () {
+      return new Promise((resolve, reject) => {
+        this.dialogSelect = new mdui.Dialog('#dialog-select-list')
+        $('#dialog-select-list')[0].addEventListener('close.mdui.dialog', () => {
+          const name = this.selectedList
+          this.selectedList = null
+          this.dialogSelect = null
+          resolve(name)
+        }, { once: true })
+        this.dialogSelect.open()
+      })
+    },
+    setList (name) {
+      this.selectedList = name
+      // eslint-disable-next-line no-unused-expressions
+      this.dialogSelect?.close()
+    },
     setXuser (name, token) {
       this.xuser = {
         name,
