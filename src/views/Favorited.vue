@@ -220,6 +220,7 @@ export default {
       this.newListName = ''
       if (this.$root.favorited.find(list => list.name === name)) {
         mdui.snackbar('新建失败：名称冲突')
+        return
       }
       this.$root.getXuserData().then(() => {
         this.$root.favorited.push({
