@@ -19,12 +19,18 @@
       <div class="mdui-typo">
         <h2>Anime PureX</h2>
         <p>此网站是对pixiv上的图片的整理，旨在分享高质量的二次元图片。非盈利，无广告。<br>
-        所有图片我们都会提供原链接，若仍然侵犯了版权，可联系我删除。<a href="mailto:NitroFire.q@gmail.com">NitroFire.q@gmail.com</a></p>
-        <h2>特性</h2>
+        所有图片我们都会提供原链接，若仍然侵犯了版权，可联系我删除。Email：<a href="mailto:i@krytro.com">i@krytro.com</a></p>
         <ul>
-          <li>基于Vue开发</li>
-          <li>全站webp支持</li>
-          <li>PWA支持</li>
+          <li>图片范围：pixiv排行榜中靠前的安全的图片</li>
+          <li>总图片量：100000+</li>
+          <li>每日自动更新</li>
+        </ul>
+        <h2>技术特性</h2>
+        <ul>
+          <li>基于VueJS开发</li>
+          <li>自适应布局，同时支持移动端、桌面端</li>
+          <li>全站优先使用webp格式图片</li>
+          <li>此网站是PWA(渐进式Web应用程序)</li>
         </ul>
         <h2>开发者</h2>
         <ul class="mdui-list developers">
@@ -32,6 +38,14 @@
             <div class="mdui-list-item-avatar"><img src="img/avatar1.png"/></div>
             <div class="mdui-list-item-content">NitroFire</div>
           </li>
+        </ul>
+        <h2>源代码</h2>
+        <p>
+          此网站开源
+        </p>
+        <ul>
+          <li>前端开源项目：<a href="https://github.com/NitroRCr/anime-purex" target="_blank">NitroRCr/anime-purex</a></li>
+          <li>后端开源项目：<a href="https://github.com/NitroRCr/AnimePureX" target="_blank">NitroRCr/AnimePureX</a></li>
         </ul>
       </div>
     </div>
@@ -64,6 +78,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.mdui-typo {
+  margin-bottom: 20px;
+}
 .mdui-typo h1,
 .mdui-typo h2 {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
