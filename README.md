@@ -6,11 +6,9 @@
 
 后端项目：[NitroRCr/AnimePureX](https://github.com/NitroRCr/AnimePureX)
 
-
-
 ### 技术栈
 
-vue2 + vue-router + ES6 + sass
+vue2 + vue-router + webpack + ES6 + sass
 
 ### 实现功能
 
@@ -26,9 +24,11 @@ const youdao = {	// 有道翻译API的密钥。不填则无法使用机翻功能
   appKey: '',
   key: ''
 }
+// ...
+const evaluators = [
+    // 后端evaluators的相关信息
+]
 ```
-
-
 
 ## Project setup
 
