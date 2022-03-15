@@ -5,13 +5,13 @@
     </button>
     <ul class="mdui-menu">
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + url.original, `${prefix}_original`)" class="mdui-ripple">原图</a>
+        <a @click="download(url.original, `${prefix}_original.${originalExt}`)" class="mdui-ripple">原图</a>
       </li>
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + url.large_webp, `${prefix}_large.webp`)" class="mdui-ripple">高清图-webp</a>
+        <a @click="download(url.large_webp, `${prefix}_large.webp`)" class="mdui-ripple">高清图-webp</a>
       </li>
       <li class="mdui-menu-item">
-        <a @click="download(common.apiHost + url.large_jpg, `${prefix}_large.jpg`)" class="mdui-ripple">高清图-jpg</a>
+        <a @click="download(url.large_jpg, `${prefix}_large.jpg`)" class="mdui-ripple">高清图-jpg</a>
       </li>
       <li class="mdui-menu-item">
         <a v-if="urls.length > 1" @click="downloadAll" class="mdui-ripple">下载全部-webp</a>
@@ -27,22 +27,14 @@ export default {
   data: () => ({ common }),
   methods: {
     download (url, fileName) {
-      var x = new XMLHttpRequest()
-      x.open('GET', url, true)
-      x.responseType = 'blob'
-      x.onload = function (e) {
-        var url = window.URL.createObjectURL(x.response)
-        var a = document.createElement('a')
-        a.href = url
-        a.download = fileName
-        a.click()
-      }
-      x.send()
+      const a = document.createElement('a')
+      a.href = encodeURI(`${common.apiHost}/download${url}?filename=${fileName}`)
+      a.click()
     },
     downloadAll () {
       for (const i in this.urls) {
         const url = this.urls[i]
-        this.download(common.apiHost + url.large_webp, `${this.title}_p${i}_large.webp`)
+        this.download(url.large_webp, `${this.title}_p${i}_large.webp`)
       }
     }
   },
@@ -52,6 +44,9 @@ export default {
     },
     prefix () {
       return `${this.title}_p${this.currIndex}`
+    },
+    originalExt () {
+      return this.url.original.split('.').pop()
     }
   }
 }
