@@ -117,6 +117,7 @@ export default {
       if (this.mode === 'register') {
         if (this.form.password !== this.form.confirm) {
           mdui.snackbar('密码不一致')
+          this.waiting = false
           return
         }
         this.register(this.form.name, this.form.password)
@@ -138,9 +139,11 @@ export default {
         dataType: 'json',
         timeout: 10000,
         success: resp => {
+          this.waiting = false
           this.getToken(name, password)
         },
         error: (xhr, errText, error) => {
+          this.waiting = false
           switch (xhr.status) {
             case 409:
               mdui.snackbar('用户名已被使用')
@@ -161,11 +164,13 @@ export default {
         dataType: 'json',
         timeout: 10000,
         success: xuser => {
+          this.waiting = false
           let password = sha256(originPasswd)
           password = sha256(password + xuser.salt).toString()
           this.getToken(name, password)
         },
         error: (xhr, errText, error) => {
+          this.waiting = false
           switch (xhr.status) {
             case 404:
               mdui.snackbar('此用户名未注册')
