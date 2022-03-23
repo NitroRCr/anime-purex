@@ -44,7 +44,7 @@ export default {
       })
     },
     goIllust (index) {
-      this.$router.push(`/illusts/${this.illusts[index].id}`).catch(() => {})
+      this.$router.replace(`/illusts/${this.illusts[index].id}`).catch(() => {})
       document.body.scrollIntoView({ behavior: 'smooth' })
     }
   },
