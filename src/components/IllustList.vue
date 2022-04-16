@@ -293,7 +293,7 @@ export default {
           break
       }
       return {
-        width: `calc(${Math.round(100 / cols)}% - 10px)`
+        width: `calc(${(100 / cols).toFixed(2)}% - 10px)`
       }
     },
     query () {

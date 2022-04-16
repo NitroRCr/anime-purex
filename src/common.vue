@@ -12,7 +12,7 @@ const AgeLimit = {
 const APIType = {
   PIXIV: 0
 }
-const apiHost = 'https://apapi.krytro.com:1443'
+const apiHost = 'https://api.krytro.com:1443/purex'
 const youdao = {
   appKey: '',
   key: ''
